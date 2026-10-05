@@ -1,58 +1,78 @@
 ---
-// Homepage hero: a notebook on indigo cloth.
-// On load the cover swings open; its inside (endpaper + bookplate) lands on the left.
-// The right-hand page turns through featured pieces: the current page lifts and turns in 3D.
+// Homepage hero: a notebook on indigo cloth, laid out as real spreads.
+//   Spread 0:  inside cover + bookplate  |  frontispiece: the lead piece
+//   Spread k:  details of piece k        |  photo of piece k
+// On load the cover swings open. Turning a page lifts the right-hand leaf, which bends
+// (8 strips), catches the light and lands as the next left-hand page, like paper does.
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import { site } from '../config/site';
-import { t, href, digits, price, type Lang } from '../i18n';
+import { t, href, digits, price, statuses, materials, type Lang } from '../i18n';
 
 interface Props { lang: Lang; items: CollectionEntry<'products'>[]; total: number }
 const { lang, items, total } = Astro.props;
 const th = lang === 'th';
 const grounds = ['var(--sage-pale)', 'var(--apricot-pale)', 'var(--butter)', '#E6DCCB', 'var(--rose-pale)', '#D9E0EA'];
+const label = (p: CollectionEntry<'products'>) => `${p.data.name[lang]} (${t(lang, 'label.no')} ${digits(lang, p.data.no, 2)})`;
 ---
 <section class="hero-book bookcloth">
   <div class="wrap">
-    <div class="book" id="book">
-      <!-- Left: inside of the cover, with a bookplate -->
-      <div class="page left khit">
-        <div class="bookplate">
-          <p class="sc">{th ? 'สมุดงานถักของแม่ · เล่มที่ ๑' : 'Mom’s crochet notebook · Volume one'}</p>
-          <h1>{th ? <>ถักด้วย<em>มือแม่</em></> : <>Made by <em>Mom’s hands</em></>}</h1>
-          <p class="lede">{site.tagline[lang]}{th ? ' ไม่มีใบไหนซ้ำ' : ', no two alike.'}</p>
-          <div class="ctas">
-            <a class="btn ink" href={href(lang, '/collection')}>{t(lang, 'cta.seeAll')} <small>{digits(lang, total)}</small></a>
-            <button class="btn ghost" data-order>{t(lang, 'cta.contact')}</button>
+    <div class="book" id="book" data-spreads={items.length}>
+      <!-- Left-hand pages -->
+      <div class="slot left" id="slot-left">
+        <div class="lp plate khit active" data-s="0">
+          <div class="bookplate">
+            <p class="sc">{th ? 'สมุดงานถักของแม่ · เล่มที่ ๑' : 'Mom’s crochet notebook · Volume one'}</p>
+            <h1>{th ? <>ถักด้วย<em>มือแม่</em></> : <>Made by <em>Mom’s hands</em></>}</h1>
+            <p class="lede">{site.tagline[lang]}{th ? ' ไม่มีใบไหนซ้ำ' : ', no two alike.'}</p>
+            <div class="ctas">
+              <a class="btn ink" href={href(lang, '/collection')}>{t(lang, 'cta.seeAll')} <small>{digits(lang, total)}</small></a>
+              <button class="btn ghost" data-order>{t(lang, 'cta.contact')}</button>
+            </div>
           </div>
         </div>
-      </div>
-
-      <!-- Right: one featured piece per page -->
-      <div class="page right" id="pages">
-        <span class="ribbon" aria-hidden="true"></span>
-        {items.map((p, i) => (
-          <div class:list={['leaf-item', { active: i === 0 }]} data-i={i} inert={i === 0 ? undefined : true}>
-            <a class="pic" href={href(lang, `/collection/${p.data.slug}`)} style={`--ground:${grounds[(p.data.no * 7) % 6]}`} tabindex={i === 0 ? undefined : -1}>
-              <span class="ground"></span>
-              <Image src={p.data.images[0]} alt={p.data.name[lang]} width={640} loading={i === 0 ? 'eager' : 'lazy'} />
-            </a>
-            <div class="cap">
-              <span class="no">{t(lang, 'label.no')} {digits(lang, p.data.no, 2)} · {digits(lang, p.data.hours)} {t(lang, 'unit.hours')}</span>
-              <a class="name" href={href(lang, `/collection/${p.data.slug}`)}>{p.data.name[lang]}</a>
-              <span class="pr">{price(lang, p.data.priceFrom)}</span>
+        {items.slice(1).map((p, k) => (
+          <div class="lp info" data-s={k + 1} inert>
+            <p class="sc">{t(lang, 'label.no')} {digits(lang, p.data.no, 2)} · {statuses[p.data.status][lang]}</p>
+            <h2>{p.data.name[lang]}</h2>
+            <p class="ipr">{price(lang, p.data.priceFrom)}</p>
+            <p class="istory">{p.data.story[lang]}</p>
+            <dl class="ispecs">
+              <dt>{t(lang, 'label.material')}</dt><dd>{p.data.materials.map((m) => materials[m]?.[lang] ?? m).join(', ')}</dd>
+              <dt>{t(lang, 'label.time')}</dt><dd>{digits(lang, p.data.hours)} {t(lang, 'unit.hours')}</dd>
+              <dt>{t(lang, 'label.size')}</dt><dd>{p.data.size}</dd>
+            </dl>
+            <div class="ctas">
+              <button class="btn solid" data-order={label(p)}>{t(lang, 'cta.order')}</button>
+              <a class="link-arrow" href={href(lang, `/collection/${p.data.slug}`)}>{t(lang, 'cta.details')} →</a>
             </div>
-            <span class="tag" aria-hidden="true"><span class="string"></span><span class="card"><b>{digits(lang, p.data.no, 2)}</b>{th ? 'ถักมือ' : 'handmade'}</span></span>
+            <span class="folio l">{digits(lang, (k + 1) * 2)}</span>
           </div>
         ))}
-        <div class="pager">
-          <button class="pg" data-turn="-1" aria-label={th ? 'หน้าก่อน' : 'Previous page'}>‹</button>
-          <span class="count"><b>{digits(lang, 1)}</b> / {digits(lang, items.length)}</span>
-          <button class="pg" data-turn="1" aria-label={th ? 'หน้าถัดไป' : 'Next page'}>›</button>
-        </div>
+        <span class="shade" aria-hidden="true"></span>
       </div>
 
-      <!-- Cover: front = bookcloth with foil title; back = endpaper with the same bookplate -->
+      <!-- Right-hand pages -->
+      <div class="slot right" id="slot-right">
+        <span class="ribbon" aria-hidden="true"></span>
+        {items.map((p, k) => (
+          <div class:list={['rp', { active: k === 0 }]} data-s={k} inert={k === 0 ? undefined : true}>
+            <a class="pic" href={href(lang, `/collection/${p.data.slug}`)} style={`--ground:${grounds[(p.data.no * 7) % 6]}`}>
+              <span class="ground"></span>
+              <Image src={p.data.images[0]} alt={p.data.name[lang]} width={640} loading={k === 0 ? 'eager' : 'lazy'} />
+            </a>
+            {k === 0
+              ? <div class="cap"><span class="no">{th ? 'ชิ้นเด่นประจำเล่ม' : 'Featured'} · {t(lang, 'label.no')} {digits(lang, p.data.no, 2)}</span><a class="name" href={href(lang, `/collection/${p.data.slug}`)}>{p.data.name[lang]}</a><span class="pr">{price(lang, p.data.priceFrom)}</span></div>
+              : <div class="cap mini"><span class="no">{t(lang, 'label.no')} {digits(lang, p.data.no, 2)}</span></div>}
+            <span class="tag" aria-hidden="true"><span class="string"></span><span class="card"><b>{digits(lang, p.data.no, 2)}</b>{th ? 'ถักมือ' : 'handmade'}</span></span>
+            <span class="folio r">{digits(lang, k * 2 + 1)}</span>
+          </div>
+        ))}
+        <button class="dogear next" data-turn="1" aria-label={th ? 'พลิกหน้าถัดไป' : 'Turn the page'}></button>
+        <span class="shade" aria-hidden="true"></span>
+      </div>
+
+      <!-- Cover: front = bookcloth with foil title; back = endpaper with the bookplate -->
       <div class="cover" aria-hidden="true">
         <div class="face cover-front bookcloth">
           <div class="frame">
@@ -61,18 +81,14 @@ const grounds = ['var(--sage-pale)', 'var(--apricot-pale)', 'var(--butter)', '#E
             <span class="sc">{th ? 'เล่มที่ ๑' : 'Volume one'}</span>
           </div>
         </div>
-        <div class="face cover-back khit" inert>
-          <div class="bookplate">
-            <p class="sc">{th ? 'สมุดงานถักของแม่ · เล่มที่ ๑' : 'Mom’s crochet notebook · Volume one'}</p>
-            <p class="h1">{th ? <>ถักด้วย<em>มือแม่</em></> : <>Made by <em>Mom’s hands</em></>}</p>
-            <p class="lede">{site.tagline[lang]}{th ? ' ไม่มีใบไหนซ้ำ' : ', no two alike.'}</p>
-            <div class="ctas">
-              <span class="btn ink">{t(lang, 'cta.seeAll')} <small>{digits(lang, total)}</small></span>
-              <span class="btn ghost">{t(lang, 'cta.contact')}</span>
-            </div>
-          </div>
-        </div>
+        <div class="face cover-back" inert></div>
       </div>
+    </div>
+
+    <div class="pager">
+      <button class="pg" data-turn="-1" aria-label={th ? 'หน้าก่อน' : 'Previous page'}>‹</button>
+      <span class="count">{th ? 'หน้า' : 'Spread'} <b>{digits(lang, 1)}</b> / {digits(lang, items.length)}</span>
+      <button class="pg" data-turn="1" aria-label={th ? 'หน้าถัดไป' : 'Next page'}>›</button>
     </div>
     <div class="hero-foot">
       <span class="dots"><span>{th ? 'ถักมือ 100%' : '100% handmade'}</span><span>{th ? 'ผ้าคราม & ไหมไทย' : 'Indigo & Thai silk'}</span><span>{t(lang, 'label.anyColour')}</span></span>
@@ -81,39 +97,55 @@ const grounds = ['var(--sage-pale)', 'var(--apricot-pale)', 'var(--butter)', '#E
 </section>
 
 <style>
-  .hero-book { position: relative; padding: calc(var(--header) + 32px) 0 0; overflow: hidden; color: #EDE7DA; }
-  .book { position: relative; display: grid; grid-template-columns: 1fr 1fr; height: clamp(480px, calc(100svh - var(--header) - 130px), 620px); perspective: 2000px; perspective-origin: 50% 40%; }
-  .page { position: relative; min-width: 0; }
-  .page.left { border-radius: 4px 0 0 4px; display: grid; place-items: center; padding: 30px; overflow: hidden;
-    box-shadow: inset -24px 0 30px -18px rgba(0,0,0,.45), 0 50px 80px -34px rgba(3,8,22,.85); }
-  .page.right { border-radius: 0 4px 4px 0; color: var(--ink);
-    background: radial-gradient(120% 90% at 70% 20%, #FFFDF8, var(--paper-hi) 55%, #EFE7D7);
-    box-shadow: inset 30px 0 30px -20px rgba(60,40,15,.28), 0 2px 0 #D9CCB2, 0 4px 0 #EEE5D3, 0 6px 0 #D2C4A8, 0 8px 0 #E8DECA, 0 50px 80px -34px rgba(3,8,22,.85); }
-
-  /* Before the cover lands the left side is just the tablecloth */
-  .book:not(.opened) .page.left { visibility: hidden; }
+  .hero-book { position: relative; padding: calc(var(--header) + 30px) 0 0; overflow: hidden; color: #EDE7DA; }
+  .book { position: relative; display: grid; grid-template-columns: 1fr 1fr; height: clamp(480px, calc(100svh - var(--header) - 150px), 620px); perspective: 2200px; perspective-origin: 50% 35%; }
+  .slot { position: relative; min-width: 0; }
+  .slot.left { border-radius: 4px 0 0 4px; box-shadow: 0 2px 0 #D9CCB2, 0 4px 0 #EEE5D3, 0 6px 0 #D2C4A8, 0 50px 80px -34px rgba(3,8,22,.85); }
+  .slot.right { border-radius: 0 4px 4px 0; box-shadow: 0 2px 0 #D9CCB2, 0 4px 0 #EEE5D3, 0 6px 0 #D2C4A8, 0 8px 0 #E8DECA, 0 50px 80px -34px rgba(3,8,22,.85); }
+  .book:not(.opened) .slot.left { visibility: hidden; }
   .book.opened .cover { display: none; }
 
-  /* Bookplate */
-  .bookplate { position: relative; width: min(450px, 100%); padding: clamp(26px, 3.4vw, 44px); color: var(--ink); background: var(--paper-hi);
+  /* Every page carries its own paper, so a copy of it can be turned */
+  .lp, .rp { position: absolute; inset: 0; visibility: hidden; color: var(--ink); }
+  .lp.active, .rp.active { visibility: visible; }
+  .lp { border-radius: 4px 0 0 4px; background: radial-gradient(120% 90% at 30% 20%, #FFFDF8, var(--paper-hi) 55%, #EFE7D7); box-shadow: inset -34px 0 34px -24px rgba(60,40,15,.32); }
+  .rp { border-radius: 0 4px 4px 0; background: radial-gradient(120% 90% at 70% 20%, #FFFDF8, var(--paper-hi) 55%, #EFE7D7); box-shadow: inset 34px 0 34px -24px rgba(60,40,15,.3); }
+  .lp.plate { display: grid; place-items: center; padding: 30px; box-shadow: inset -26px 0 30px -18px rgba(0,0,0,.5); }
+  .lp.plate.khit { background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' fill='none' stroke='%23E2C47E' stroke-opacity='.55' stroke-width='1.2'%3E%3Cpath d='M20 3 37 20 20 37 3 20Z'/%3E%3Cpath d='M20 11 29 20 20 29 11 20Z'/%3E%3Cpath d='M18 20h4M20 18v4'/%3E%3C/svg%3E") 0 0 / 40px 40px, var(--kram); }
+
+  .bookplate { position: relative; width: min(450px, 100%); padding: clamp(26px, 3.4vw, 44px); background: var(--paper-hi);
     box-shadow: 0 24px 40px -24px rgba(0,0,0,.6); outline: 1px solid rgba(181,135,58,.45); outline-offset: -10px; }
-  .bookplate h1, .bookplate .h1 { font: 500 clamp(46px, 5vw, 76px)/1 var(--display); margin: 14px 0 16px; }
-  :global(:lang(th)) .bookplate h1, :global(:lang(th)) .bookplate .h1 { font: 400 clamp(40px, 4.2vw, 62px)/1.25 var(--serif-th); }
+  .bookplate h1 { font: 500 clamp(46px, 5vw, 76px)/1 var(--display); margin: 14px 0 16px; }
+  :global(:lang(th)) .bookplate h1 { font: 400 clamp(40px, 4.2vw, 62px)/1.25 var(--serif-th); }
   .bookplate em { font-style: italic; color: var(--ochre); display: block; }
   :global(:lang(th)) .bookplate em { font-style: normal; }
   .lede { color: var(--muted); margin: 0 0 22px; font-size: 16px; }
-  .ctas { display: flex; flex-wrap: wrap; gap: 10px; }
+  .ctas { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; }
   .ctas small { opacity: .7; font-size: 12px; }
 
-  /* Right page content: fixed areas, so the bag can never cover the text */
-  .leaf-item { position: absolute; inset: 0; display: grid; grid-template-rows: minmax(0, 1fr) auto; padding: 46px 48px 74px 64px; visibility: hidden; }
-  .leaf-item.active { visibility: visible; }
+  /* Details page */
+  .lp.info { display: flex; flex-direction: column; justify-content: center; padding: 40px clamp(40px, 5vw, 70px) 50px; }
+  .lp.info h2 { font: 500 clamp(34px, 3.6vw, 52px)/1.05 var(--display); margin: 12px 0 8px; text-wrap: balance; }
+  :global(:lang(th)) .lp.info h2 { font: 400 clamp(26px, 2.5vw, 36px)/1.4 var(--serif-th); }
+  .ipr { color: var(--ochre); font-weight: 500; font-size: 19px; margin: 0 0 12px; }
+  .istory { color: var(--muted); margin: 0 0 16px; max-width: 40ch; }
+  .ispecs { display: grid; grid-template-columns: auto 1fr; gap: 4px 18px; margin: 0 0 24px; padding: 12px 0; border-block: 1px solid var(--faint); font-size: 15px; }
+  .ispecs dt { color: var(--muted); }
+  .ispecs dd { margin: 0; }
+  .folio { position: absolute; bottom: 18px; font: 400 15px var(--serif-th); color: var(--muted); }
+  .folio.l { left: 28px; }
+  .folio.r { right: 28px; }
+
+  /* Photo page: fixed areas so the bag never covers the text */
+  .rp { display: grid; grid-template-rows: minmax(0, 1fr) auto; padding: 46px 48px 54px 64px; }
   .pic { position: relative; display: grid; place-items: center; min-height: 0; height: 100%; }
-  .ground { position: absolute; left: 50%; top: 50%; width: min(72%, 62vh); aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; background: var(--ground);
+  .ground { position: absolute; left: 50%; top: 50%; width: min(74%, 64vh); aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; background: var(--ground);
     box-shadow: inset 0 0 0 10px rgba(255,255,255,.35), inset 0 0 0 11px rgba(181,135,58,.25); }
   .pic :global(img) { position: relative; max-height: 92%; max-width: 70%; width: auto; height: auto; object-fit: contain; filter: drop-shadow(0 26px 20px rgba(36,30,26,.36)); transition: transform .8s var(--ease); }
   .pic:hover :global(img) { transform: translateY(-4px) rotate(-1.5deg); }
-  .cap { display: grid; grid-template-columns: 1fr auto; gap: 2px 16px; align-items: baseline; padding-top: 16px; border-top: 1px solid var(--faint); }
+  .cap { display: grid; grid-template-columns: 1fr auto; gap: 2px 16px; align-items: baseline; padding-top: 14px; border-top: 1px solid var(--faint); }
+  .cap.mini { border: 0; }
   .cap .no { grid-column: 1 / -1; font-size: 12px; letter-spacing: .1em; color: var(--muted); }
   .cap .name { font: 500 28px/1.2 var(--display); text-decoration: none; min-width: 0; }
   :global(:lang(th)) .cap .name { font: 400 22px/1.5 var(--serif-th); }
@@ -127,41 +159,46 @@ const grounds = ['var(--sage-pale)', 'var(--apricot-pale)', 'var(--butter)', '#E
   @keyframes swing { 0%,100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
   .ribbon { position: absolute; z-index: 4; top: -6px; left: 26px; width: 22px; height: 110px; background: linear-gradient(90deg, #7E2418, #A9382A 45%, #8A2B1D); clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 86%, 0 100%); transform-origin: top; animation: sway 7s ease-in-out infinite; }
   @keyframes sway { 50% { transform: rotate(2deg); } }
-  .pager { position: absolute; z-index: 5; left: 64px; bottom: 20px; display: flex; align-items: center; gap: 14px; font-size: 14px; color: var(--muted); }
-  .pager b { color: var(--ink); font-weight: 500; }
-  .pg { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--faint); background: var(--paper-hi); cursor: pointer; font-size: 22px; line-height: 1; transition: background .3s, color .3s; }
-  .pg:hover { background: var(--kram); color: #fff; }
 
-  /* Shared 3D leaf: used by the cover and by turning pages */
-  .cover, :global(.turning) { position: absolute; z-index: 8; top: 0; bottom: 0; left: 50%; width: 50%; transform-origin: left center; transform-style: preserve-3d; pointer-events: none; }
-  .face, :global(.turning .face) { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+  /* Lifted corner invites a turn */
+  .dogear { position: absolute; z-index: 5; right: 0; bottom: 0; width: 46px; height: 46px; border: 0; padding: 0; cursor: pointer; background: none; }
+  .dogear::before { content: ""; position: absolute; right: 0; bottom: 0; width: 26px; height: 26px; transition: width .35s var(--ease), height .35s var(--ease);
+    background: linear-gradient(315deg, transparent 50%, #E3D8C4 50%, #F6EFE3 75%, #D9CCB4); box-shadow: -3px -3px 6px -2px rgba(60,40,15,.25); border-radius: 0 0 4px 0; }
+  .dogear:hover::before { width: 44px; height: 44px; }
+
+  /* Shadow the turning leaf casts on the page underneath */
+  .shade { position: absolute; inset: 0; z-index: 6; pointer-events: none; opacity: 0; }
+  .slot.right .shade { background: linear-gradient(90deg, rgba(20,14,6,.55), rgba(20,14,6,.18) var(--edge, 40%), transparent calc(var(--edge, 40%) + 18%)); border-radius: 0 4px 4px 0; }
+  .slot.left .shade { background: linear-gradient(270deg, rgba(20,14,6,.55), rgba(20,14,6,.18) var(--edge, 40%), transparent calc(var(--edge, 40%) + 18%)); border-radius: 4px 0 0 4px; }
+
+  /* Turning leaf, built from strips (JS) */
+  :global(.leaf), :global(.leaf .strip) { position: absolute; top: 0; height: 100%; transform-origin: left center; transform-style: preserve-3d; }
+  :global(.leaf) { z-index: 9; left: 50%; pointer-events: none; }
+  :global(.leaf .strip) { left: 100%; }
+  :global(.leaf .side) { position: absolute; inset: 0; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+  :global(.leaf .side.b) { transform: rotateY(180deg); }
+  :global(.leaf .side > .inner) { position: absolute; top: 0; height: 100%; }
+  :global(.leaf .side > .inner > *) { visibility: visible !important; }
+  :global(.leaf .light) { position: absolute; inset: 0; pointer-events: none; background: #1A1206; opacity: 0; }
+  :global(.leaf *) { animation: none !important; transition: none !important; }
+
+  /* Cover */
+  .cover { position: absolute; z-index: 9; top: 0; bottom: 0; left: 50%; width: 50%; transform-origin: left center; transform-style: preserve-3d; pointer-events: none;
+    animation: openCover 2s cubic-bezier(.55,.05,.25,1) .5s both; }
+  .face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
   .cover-front { border-radius: 0 4px 4px 0; display: grid; place-items: center; box-shadow: inset 14px 0 18px -10px rgba(0,0,0,.55), 0 40px 60px -30px rgba(3,8,22,.9); }
-  .cover-back { transform: rotateY(180deg); border-radius: 4px 0 0 4px; display: grid; place-items: center; padding: 30px; box-shadow: inset 24px 0 30px -18px rgba(0,0,0,.45); }
-  .cover { animation: openCover 2s cubic-bezier(.55,.05,.25,1) .5s both; }
+  .cover-back { transform: rotateY(180deg); border-radius: 4px 0 0 4px; }
   @keyframes openCover { from { transform: rotateY(0); } to { transform: rotateY(-180deg); } }
   .frame { display: grid; place-items: center; gap: 10px; padding: 50px 40px; border: 1px solid rgba(226,196,126,.55); outline: 1px solid rgba(226,196,126,.25); outline-offset: 8px; text-align: center; }
   .frame .sc { color: #CDB98C; }
   .frame .foil { font: 500 clamp(56px, 6vw, 90px)/1.2 var(--serif-th);
     background: linear-gradient(100deg, #8C6622 0%, #E8CD8A 22%, #B98C3D 40%, #F4E4B4 55%, #A07732 75%, #DDBB70 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
-  :global(.turning .front) { border-radius: 0 4px 4px 0; overflow: hidden; color: var(--ink); background: radial-gradient(120% 90% at 70% 20%, #FFFDF8, var(--paper-hi) 55%, #EFE7D7); }
-  :global(.turning .front::after) { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(60,40,15,.25), transparent 30%, rgba(60,40,15,.0) 70%, rgba(60,40,15,.12)); }
-  :global(.turning .back) { transform: rotateY(180deg); border-radius: 4px 0 0 4px; background: linear-gradient(90deg, #E6DCCA, var(--paper-hi) 60%, #F3ECDF); }
-  :global(.turning.fwd) { animation: turnFwd .9s cubic-bezier(.45,.05,.3,1) both; }
-  :global(.turning.back-dir) { animation: turnBack .9s cubic-bezier(.45,.05,.3,1) both; }
-  /* Some browsers still draw a face's children from behind, so swap faces exactly when the page passes 90° (40% of the eased turn) */
-  :global(.turning.fwd .front) { animation: frontOut .9s linear both; }
-  :global(.turning.fwd .back) { animation: backIn .9s linear both; }
-  :global(.turning.back-dir .front) { animation: frontIn .9s linear both; }
-  :global(.turning.back-dir .back) { animation: backOut .9s linear both; }
-  @keyframes frontOut { 0%, 39.5% { opacity: 1; } 40%, 100% { opacity: 0; } }
-  @keyframes backIn { 0%, 39.5% { opacity: 0; } 40%, 100% { opacity: 1; } }
-  @keyframes frontIn { 0%, 39.5% { opacity: 0; } 40%, 100% { opacity: 1; } }
-  @keyframes backOut { 0%, 39.5% { opacity: 1; } 40%, 100% { opacity: 0; } }
-  @keyframes turnFwd { 0% { transform: rotateY(0); } 85% { opacity: 1; } 100% { transform: rotateY(-178deg); opacity: 0; } }
-  @keyframes turnBack { 0% { transform: rotateY(-178deg); opacity: 0; } 15% { opacity: 1; } 100% { transform: rotateY(0); } }
-
-  .hero-foot { display: flex; justify-content: center; padding: 34px 0 30px; font-size: 14px; color: #B8C1D9; }
+  .pager { display: flex; justify-content: center; align-items: center; gap: 16px; padding: 26px 0 0; font-size: 14px; color: #B8C1D9; }
+  .pager b { color: #EDE7DA; font-weight: 500; }
+  .pg { width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(237,231,218,.35); background: transparent; color: #EDE7DA; cursor: pointer; font-size: 22px; line-height: 1; transition: background .3s, color .3s; }
+  .pg:hover { background: #EDE7DA; color: var(--kram-deep); }
+  .hero-foot { display: flex; justify-content: center; padding: 18px 0 30px; font-size: 14px; color: #8F9AB8; }
   .dots span + span::before { content: "·"; margin: 0 12px; opacity: .6; }
 
   @media (prefers-reduced-motion: reduce) {
@@ -170,11 +207,13 @@ const grounds = ['var(--sage-pale)', 'var(--apricot-pale)', 'var(--butter)', '#E
   }
   @media (max-width: 860px) {
     .book { grid-template-columns: 1fr; height: auto; perspective: none; }
-    .cover { display: none; }
-    .page.left { border-radius: 4px 4px 0 0; padding: 40px 18px; box-shadow: none; }
-    .page.right { border-radius: 0 0 4px 4px; height: 540px; box-shadow: 0 40px 60px -30px rgba(3,8,22,.8); }
-    .leaf-item { padding: 50px 22px 78px; }
-    .pager { left: 22px; }
+    .cover, .dogear { display: none; }
+    .slot.left { height: 560px; border-radius: 4px 4px 0 0; box-shadow: none; }
+    .slot.right { height: 520px; border-radius: 0 0 4px 4px; }
+    .lp, .rp { border-radius: 0; box-shadow: none; }
+    .lp.plate { padding: 30px 18px; }
+    .lp.info { padding: 34px 24px; }
+    .rp { padding: 50px 22px 50px; }
     .ground { width: min(78%, 300px); }
   }
 </style>
@@ -182,63 +221,132 @@ const grounds = ['var(--sage-pale)', 'var(--apricot-pale)', 'var(--butter)', '#E
 <script>
   const book = document.getElementById('book');
   if (book) {
-    const pages = document.getElementById('pages')!;
-    const items = [...pages.querySelectorAll<HTMLElement>('.leaf-item')];
-    const countEl = pages.querySelector<HTMLElement>('.count b')!;
+    const left = document.getElementById('slot-left')!;
+    const right = document.getElementById('slot-right')!;
+    const L = [...left.querySelectorAll<HTMLElement>('.lp')];
+    const R = [...right.querySelectorAll<HTMLElement>('.rp')];
+    const shadeL = left.querySelector<HTMLElement>('.shade')!;
+    const shadeR = right.querySelector<HTMLElement>('.shade')!;
+    const countEl = document.querySelector<HTMLElement>('.hero-book .count b')!;
     const thai = document.documentElement.lang === 'th';
     const fmt = (n: number) => (thai ? String(n).replace(/\d/g, (d) => '๐๑๒๓๔๕๖๗๘๙'[+d]) : String(n));
-    const animate = matchMedia('(min-width: 861px) and (prefers-reduced-motion: no-preference)');
+    const fancy = matchMedia('(min-width: 861px) and (prefers-reduced-motion: no-preference)');
+    const STRIPS = 8, DURATION = 1150, CURL = 64;
 
-    // Cover: once it has swung over, the real left page (identical) takes its place
+    // Cover: its inside shows the same bookplate, so the landing is seamless
     const cover = book.querySelector<HTMLElement>('.cover')!;
-    if (!animate.matches) book.classList.add('opened');
+    const coverBack = cover.querySelector<HTMLElement>('.cover-back')!;
+    const plateCopy = L[0].cloneNode(true) as HTMLElement;
+    plateCopy.inert = true;
+    coverBack.appendChild(plateCopy);
+    if (!fancy.matches) book.classList.add('opened');
     else cover.addEventListener('animationend', () => book.classList.add('opened'), { once: true });
 
-    let i = 0, busy = false;
-    function show(n: number) {
-      items[i].classList.remove('active'); items[i].inert = true;
-      i = n;
-      items[i].classList.add('active'); items[i].inert = false;
-      countEl.textContent = fmt(i + 1);
+    let s = 0, busy = false;
+    const setActive = (list: HTMLElement[], n: number) => list.forEach((el, k) => { el.classList.toggle('active', k === n); el.inert = k !== n; });
+    const updateCount = () => { countEl.textContent = fmt(s + 1); };
+
+    // A leaf made of nested strips; each strip shows its slice of the front and back pages
+    function makeLeaf(front: HTMLElement, back: HTMLElement) {
+      const W = right.offsetWidth, w = W / STRIPS;
+      const root = document.createElement('div');
+      root.className = 'leaf';
+      root.setAttribute('aria-hidden', 'true');
+      const strips: { el: HTMLElement; f: HTMLElement; b: HTMLElement; lf: HTMLElement; lb: HTMLElement }[] = [];
+      let parent: HTMLElement = root;
+      for (let i = 0; i < STRIPS; i++) {
+        const el = i === 0 ? root : document.createElement('div');
+        if (i > 0) { el.className = 'strip'; parent.appendChild(el); }
+        el.style.width = w + 'px';
+        const side = (page: HTMLElement, offset: number, cls: string) => {
+          const sd = document.createElement('div'); sd.className = 'side ' + cls;
+          const inner = document.createElement('div'); inner.className = 'inner';
+          inner.style.width = W + 'px'; inner.style.left = -offset + 'px';
+          const copy = page.cloneNode(true) as HTMLElement; copy.inert = true;
+          inner.appendChild(copy);
+          const light = document.createElement('div'); light.className = 'light';
+          sd.append(inner, light); el.appendChild(sd);
+          return [sd, light];
+        };
+        const [f, lf] = side(front, i * w, 'f');
+        const [b, lb] = side(back, (STRIPS - 1 - i) * w, 'b');
+        strips.push({ el, f, b, lf, lb });
+        parent = el;
+      }
+      book!.appendChild(root);
+      return { root, strips };
     }
-    function leafWith(item: HTMLElement, dir: number) {
-      const leaf = document.createElement('div');
-      leaf.className = 'turning ' + (dir > 0 ? 'fwd' : 'back-dir');
-      leaf.setAttribute('aria-hidden', 'true');
-      const front = document.createElement('div');
-      front.className = 'face front';
-      const copy = item.cloneNode(true) as HTMLElement;
-      copy.classList.add('active'); copy.inert = true;
-      front.appendChild(copy);
-      const back = document.createElement('div');
-      back.className = 'face back';
-      leaf.append(front, back);
-      book!.appendChild(leaf);
-      return leaf;
+
+    const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+    function flip(dir: number, front: HTMLElement, back: HTMLElement, done: () => void) {
+      const { root, strips } = makeLeaf(front, back);
+      const shade = dir > 0 ? shadeR : shadeL;
+      const bendSign = dir > 0 ? -1 : 1;
+      let start = 0;
+      function frame(now: number) {
+        if (!start) start = now;
+        const t = Math.min(1, (now - start) / DURATION);
+        const e = ease(t);
+        const theta = dir > 0 ? -180 * e : -180 * (1 - e);
+        // the free edge leads, so the page curves; flat again when it lands
+        const bend = (bendSign * CURL * Math.sin(Math.PI * t)) / STRIPS;
+        strips.forEach((st, i) => {
+          st.el.style.transform = `rotateY(${i === 0 ? theta : bend}deg)`;
+          const abs = Math.max(-180, Math.min(0, theta + i * bend));
+          const facing = abs > -90;
+          st.f.style.visibility = facing ? 'visible' : 'hidden';
+          st.b.style.visibility = facing ? 'hidden' : 'visible';
+          st.lf.style.opacity = String(Math.min(0.3, (-abs / 90) * 0.3));
+          st.lb.style.opacity = String(Math.min(0.3, ((180 + abs) / 90) * 0.3));
+        });
+        // shadow on the page being uncovered or covered, strongest mid-turn
+        shade.style.opacity = String(Math.sin(Math.PI * t) * 0.9);
+        const reach = dir > 0 ? Math.cos((-theta * Math.PI) / 180) : Math.cos(((180 + theta) * Math.PI) / 180);
+        shade.style.setProperty('--edge', Math.max(0, reach) * 70 + '%');
+        if (t < 1) requestAnimationFrame(frame);
+        else { shade.style.opacity = '0'; root.remove(); done(); }
+      }
+      requestAnimationFrame(frame);
     }
+
     function go(dir: number) {
       if (busy) return;
-      const next = (i + dir + items.length) % items.length;
-      if (!animate.matches || !book!.classList.contains('opened')) { show(next); return; }
+      const n = s + dir;
+      if (n < 0 || n >= R.length) { nudge(dir); return; }
+      if (!fancy.matches || !book!.classList.contains('opened')) { s = n; setActive(L, s); setActive(R, s); updateCount(); return; }
       busy = true;
-      // Forward: the current page lifts away, the next is already underneath.
-      // Back: the previous page swings in from the left and settles on top.
-      const leaf = leafWith(dir > 0 ? items[i] : items[next], dir);
-      if (dir > 0) show(next);
-      leaf.addEventListener('animationend', () => { if (dir < 0) show(next); leaf.remove(); busy = false; }, { once: true });
+      if (dir > 0) {
+        // the right page lifts; its back is the next left page
+        const front = R[s], back = L[n];
+        setActive(R, n);
+        flip(1, front, back, () => { s = n; setActive(L, s); updateCount(); busy = false; });
+      } else {
+        // the left page lifts back; its back is the previous right page
+        const front = R[n], back = L[s];
+        setActive(L, n);
+        flip(-1, front, back, () => { s = n; setActive(R, s); updateCount(); busy = false; });
+      }
     }
-    book.addEventListener('click', (e) => {
-      const b = (e.target as HTMLElement).closest<HTMLElement>('[data-turn]');
+    // At the first or last spread, the page lifts a little instead of doing nothing
+    function nudge(dir: number) {
+      const el = dir > 0 ? right : left;
+      el.style.transformOrigin = dir > 0 ? 'left center' : 'right center';
+      el.animate([{ transform: 'none' }, { transform: `rotateY(${dir > 0 ? -7 : 7}deg)` }, { transform: 'none' }], { duration: 460, easing: 'ease-out' });
+    }
+
+    document.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLElement>('.hero-book [data-turn]');
       if (b) go(Number(b.dataset.turn));
     });
     addEventListener('keydown', (e) => {
-      if (!(e.target as HTMLElement).closest('input, textarea, select') && book.getBoundingClientRect().bottom > 0 && scrollY < innerHeight) {
-        if (e.key === 'ArrowRight') go(1);
-        if (e.key === 'ArrowLeft') go(-1);
-      }
+      if ((e.target as HTMLElement).closest('input, textarea, select, dialog')) return;
+      if (book.getBoundingClientRect().bottom < 0 || scrollY > innerHeight) return;
+      if (e.key === 'ArrowRight') go(1);
+      if (e.key === 'ArrowLeft') go(-1);
     });
     let x0 = 0;
-    pages.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
-    pages.addEventListener('touchend', (e) => { const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1); });
+    book.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+    book.addEventListener('touchend', (e) => { const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1); });
+    updateCount();
   }
 </script>
