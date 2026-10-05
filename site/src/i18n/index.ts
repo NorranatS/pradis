@@ -32,7 +32,7 @@ export const ui = {
   'order.piece': { th: 'สวัสดีค่ะ สนใจ', en: 'Hello! I’m interested in' },
   'order.pieceEnd': { th: ' ค่ะ', en: '.' },
   'filter.all': { th: 'ทั้งหมด', en: 'All' },
-  'filter.search': { th: 'ค้นหาชื่อ สี หรือวัสดุ…', en: 'Search by name, colour or material…' },
+  'filter.search': { th: 'ค้นหาในสมุด… ชื่อ สี หรือวัสดุ', en: 'Search the notebook… name, colour or material' },
   'filter.colour': { th: 'สี', en: 'Colour' },
   'filter.material': { th: 'วัสดุ', en: 'Material' },
   'filter.status': { th: 'สถานะ', en: 'Availability' },
