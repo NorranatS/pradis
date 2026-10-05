@@ -17,7 +17,7 @@ const label = (p: CollectionEntry<'products'>) => `${p.data.name[lang]} (${t(lan
 ---
 <section class="hero-book bookcloth">
   <div class="wrap">
-    <div class="book" id="book" data-spreads={items.length}>
+    <div class="book closed" id="book" data-spreads={items.length}>
       <!-- Left-hand pages -->
       <div class="slot left" id="slot-left">
         <div class="lp plate khit active" data-s="0">
@@ -73,11 +73,12 @@ const label = (p: CollectionEntry<'products'>) => `${p.data.name[lang]} (${t(lan
       </div>
 
       <!-- Cover: front = bookcloth with foil title; back = endpaper with the bookplate -->
-      <div class="cover" aria-hidden="true">
+      <div class="cover" id="cover" role="button" tabindex="0" aria-label={th ? 'เปิดสมุด' : 'Open the notebook'}>
         <div class="face cover-front bookcloth">
           <div class="frame">
             <span class="sc">{th ? 'สมุดงานถักของแม่' : 'Mom’s crochet notebook'}</span>
             <span class="foil">{site.name.th}</span>
+            <span class="sub">{th ? 'กระเป๋าถักมือ · ผ้าคราม · ไหมไทย' : 'Hand crochet · indigo · Thai silk'}</span>
             <span class="sc">{th ? 'เล่มที่ ๑' : 'Volume one'}</span>
           </div>
         </div>
@@ -85,6 +86,7 @@ const label = (p: CollectionEntry<'products'>) => `${p.data.name[lang]} (${t(lan
       </div>
     </div>
 
+    <p class="open-hint" aria-hidden="true"><span class="hand-ico">☝</span> {th ? 'แตะที่ปกเพื่อเปิดสมุด' : 'Tap the cover to open'}</p>
     <div class="pager">
       <button class="pg" data-turn="-1" aria-label={th ? 'หน้าก่อน' : 'Previous page'}>‹</button>
       <span class="count">{th ? 'หน้า' : 'Spread'} <b>{digits(lang, 1)}</b> / {digits(lang, items.length)}</span>
@@ -102,7 +104,20 @@ const label = (p: CollectionEntry<'products'>) => `${p.data.name[lang]} (${t(lan
   .slot { position: relative; min-width: 0; }
   .slot.left { border-radius: 4px 0 0 4px; box-shadow: 0 2px 0 #D9CCB2, 0 4px 0 #EEE5D3, 0 6px 0 #D2C4A8, 0 50px 80px -34px rgba(3,8,22,.85); }
   .slot.right { border-radius: 0 4px 4px 0; box-shadow: 0 2px 0 #D9CCB2, 0 4px 0 #EEE5D3, 0 6px 0 #D2C4A8, 0 8px 0 #E8DECA, 0 50px 80px -34px rgba(3,8,22,.85); }
-  .book:not(.opened) .slot.left { visibility: hidden; }
+  /* opacity (not visibility) so the active page inside can't override it */
+  .book:not(.opened) .slot.left { opacity: 0; pointer-events: none; }
+  /* Closed: the book sits centred on the cloth; it slides to centre the spread as it opens */
+  .book { transition: translate 1.8s cubic-bezier(.55,.05,.25,1); }
+  .book.closed { translate: -25% 0; }
+  .book.closed .cover { pointer-events: auto; cursor: pointer; transition: transform .6s var(--ease); }
+  .book.closed .cover:hover, .book.closed .cover:focus-visible { transform: rotateY(-14deg); }
+  .book.closed .cover:focus-visible { outline: 2px solid #E2C47E; outline-offset: 6px; }
+  .open-hint { text-align: center; margin: 22px 0 0; font-size: 15px; color: #CDB98C; transition: opacity .5s; }
+  .hand-ico { display: inline-block; animation: tapHint 1.8s ease-in-out infinite; }
+  @keyframes tapHint { 50% { transform: translateY(-5px); } }
+  .book:not(.closed) ~ .open-hint { opacity: 0; height: 0; margin: 0; overflow: hidden; }
+  .book.closed ~ .pager { opacity: 0; pointer-events: none; }
+  .pager { transition: opacity .6s .6s; }
   .book.opened .cover { display: none; }
 
   /* Every page carries its own paper, so a copy of it can be turned */
@@ -183,14 +198,21 @@ const label = (p: CollectionEntry<'products'>) => `${p.data.name[lang]} (${t(lan
   :global(.leaf *) { animation: none !important; transition: none !important; }
 
   /* Cover */
-  .cover { position: absolute; z-index: 9; top: 0; bottom: 0; left: 50%; width: 50%; transform-origin: left center; transform-style: preserve-3d; pointer-events: none;
-    animation: openCover 2s cubic-bezier(.55,.05,.25,1) .5s both; }
+  .cover { position: absolute; z-index: 9; top: 0; bottom: 0; left: 50%; width: 50%; transform-origin: left center; transform-style: preserve-3d; pointer-events: none; }
+  .book.opening .cover { animation: openCover 1.8s cubic-bezier(.55,.05,.25,1) both; }
   .face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
   .cover-front { border-radius: 0 4px 4px 0; display: grid; place-items: center; box-shadow: inset 14px 0 18px -10px rgba(0,0,0,.55), 0 40px 60px -30px rgba(3,8,22,.9); }
   .cover-back { transform: rotateY(180deg); border-radius: 4px 0 0 4px; }
+  /* Hide each face explicitly until it faces the viewer (the cover passes 90° at ~42% of the opening) */
+  .cover-back { visibility: hidden; }
+  .book.opening .cover-front { animation: coverFrontOut 1.8s linear both; }
+  .book.opening .cover-back { animation: coverBackIn 1.8s linear both; }
+  @keyframes coverFrontOut { 0%, 41.5% { visibility: visible; } 42%, 100% { visibility: hidden; } }
+  @keyframes coverBackIn { 0%, 41.5% { visibility: hidden; } 42%, 100% { visibility: visible; } }
   @keyframes openCover { from { transform: rotateY(0); } to { transform: rotateY(-180deg); } }
   .frame { display: grid; place-items: center; gap: 10px; padding: 50px 40px; border: 1px solid rgba(226,196,126,.55); outline: 1px solid rgba(226,196,126,.25); outline-offset: 8px; text-align: center; }
   .frame .sc { color: #CDB98C; }
+  .frame .sub { font-size: 14px; color: #B8C1D9; letter-spacing: .04em; }
   .frame .foil { font: 500 clamp(56px, 6vw, 90px)/1.2 var(--serif-th);
     background: linear-gradient(100deg, #8C6622 0%, #E8CD8A 22%, #B98C3D 40%, #F4E4B4 55%, #A07732 75%, #DDBB70 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
@@ -202,12 +224,14 @@ const label = (p: CollectionEntry<'products'>) => `${p.data.name[lang]} (${t(lan
   .dots span + span::before { content: "·"; margin: 0 12px; opacity: .6; }
 
   @media (prefers-reduced-motion: reduce) {
-    .cover { display: none; }
+    .cover, .open-hint { display: none; }
+    .book.closed { translate: none; }
     .tag, .ribbon { animation: none; }
   }
   @media (max-width: 860px) {
     .book { grid-template-columns: 1fr; height: auto; perspective: none; }
-    .cover, .dogear { display: none; }
+    .cover, .dogear, .open-hint { display: none; }
+    .book.closed { translate: none; }
     .slot.left { height: 560px; border-radius: 4px 4px 0 0; box-shadow: none; }
     .slot.right { height: 520px; border-radius: 0 0 4px 4px; }
     .lp, .rp { border-radius: 0; box-shadow: none; }
@@ -239,8 +263,22 @@ const label = (p: CollectionEntry<'products'>) => `${p.data.name[lang]} (${t(lan
     const plateCopy = L[0].cloneNode(true) as HTMLElement;
     plateCopy.inert = true;
     coverBack.appendChild(plateCopy);
-    if (!fancy.matches) book.classList.add('opened');
-    else cover.addEventListener('animationend', () => book.classList.add('opened'), { once: true });
+    // The book stays closed until the visitor opens it
+    if (!fancy.matches) { book.classList.remove('closed'); book.classList.add('opened'); }
+    function openBook() {
+      if (!book!.classList.contains('closed')) return;
+      book!.classList.remove('closed');
+      book!.classList.add('opening');
+      cover.removeAttribute('tabindex');
+      const done = (e: AnimationEvent) => {
+        if (e.target !== cover) return;
+        cover.removeEventListener('animationend', done);
+        book!.classList.remove('opening'); book!.classList.add('opened');
+      };
+      cover.addEventListener('animationend', done);
+    }
+    cover.addEventListener('click', openBook);
+    cover.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openBook(); } });
 
     let s = 0, busy = false;
     const setActive = (list: HTMLElement[], n: number) => list.forEach((el, k) => { el.classList.toggle('active', k === n); el.inert = k !== n; });
@@ -310,6 +348,7 @@ const label = (p: CollectionEntry<'products'>) => `${p.data.name[lang]} (${t(lan
     }
 
     function go(dir: number) {
+      if (book!.classList.contains('closed')) { if (dir > 0) openBook(); return; }
       if (busy) return;
       const n = s + dir;
       if (n < 0 || n >= R.length) { nudge(dir); return; }

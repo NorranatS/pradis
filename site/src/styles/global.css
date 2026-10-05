@@ -229,7 +229,7 @@ dialog[open] { animation: pop .4s var(--ease); }
 @media (max-width: 860px) { .thread-layer, .holes-layer { display: none; } }
 
 /* ───────── Chips ───────── */
-.chip { display: inline-flex; flex: none; white-space: nowrap; align-items: center; gap: 6px; height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--faint); background: var(--paper-hi); cursor: pointer; font-size: 14px; color: var(--ink); transition: background .25s, color .25s, border-color .25s; }
+.chip { display: inline-flex; flex: none; white-space: nowrap; align-items: center; gap: 6px; height: 38px; padding: 0 14px; border-radius: 3px; border: 1px solid var(--faint); background: var(--paper-hi); cursor: pointer; font-size: 14px; color: var(--ink); transition: background .25s, color .25s, border-color .25s; }
 .chip small { opacity: .6; font-size: 12px; }
 .chip:hover { border-color: var(--ink); }
 .chip[aria-pressed="true"] { background: var(--kram); border-color: var(--kram); color: #fff; }
