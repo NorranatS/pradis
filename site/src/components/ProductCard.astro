@@ -1,0 +1,35 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { href, digits, price, statuses, colours, type Lang } from '../i18n';
+
+interface Props {
+  product: CollectionEntry<'products'>;
+  lang: Lang;
+  index?: number;
+  /** Wrap with an under-sheet for the layered look */
+  layered?: boolean;
+  eager?: boolean;
+}
+const { product, lang, index = 0, layered = true, eager = false } = Astro.props;
+const p = product.data;
+const backs = ['kraftpaper', 'linen', ''];
+const backStyle = index % 3 === 2 ? 'background:var(--sage-pale);box-shadow:var(--shadow)' : undefined;
+---
+<article class="pcard reveal" data-slug={p.slug}>
+  {layered && <div class:list={['under back', backs[index % 3]]} style={backStyle}></div>}
+  <a class="pcard-body sheet top" href={href(lang, `/collection/${p.slug}`)} data-tilt data-quick={p.slug}>
+    <div class:list={['ground', `bg-${(p.no * 7) % 6}`]}>
+      <span class="no">{digits(lang, p.no, 2)}</span>
+      {p.status !== 'made-to-order' && <span class:list={['badge', p.status]}>{statuses[p.status][lang]}</span>}
+      <Image src={p.images[0]} alt={p.name[lang]} width={420} loading={eager ? 'eager' : 'lazy'} />
+    </div>
+    <div class="meta">
+      <h3>{p.name[lang]}</h3>
+      <div class="row">
+        <span class="price">{price(lang, p.priceFrom)}</span>
+        <span class="sw" aria-hidden="true">{p.colours.map((c) => <i style={`background:${colours[c]?.hex ?? '#ccc'}`}></i>)}</span>
+      </div>
+    </div>
+  </a>
+</article>

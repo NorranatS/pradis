@@ -1,0 +1,33 @@
+{
+  "no": 7,
+  "slug": "moon-filet-tote",
+  "name": {
+    "th": "ตาข่ายจันทร์",
+    "en": "Moon Filet Tote"
+  },
+  "category": "bag",
+  "priceFrom": 1190,
+  "materials": [
+    "cotton-cord"
+  ],
+  "technique": {
+    "th": "โครเชต์",
+    "en": "Crochet"
+  },
+  "hours": 18,
+  "size": "40 × 36 cm",
+  "colours": [
+    "cream"
+  ],
+  "status": "ready",
+  "featured": true,
+  "images": [
+    "./images/moon-filet-tote.png"
+  ],
+  "story": {
+    "th": "กระเป๋าสะพายลายตาข่ายฟิเลต์ พร้อมพู่ลูกปัดถักมือ",
+    "en": "A filet-mesh shoulder tote with a hand-crocheted bead tassel."
+  },
+  "added": "2026-09-18",
+  "dummy": true
+}

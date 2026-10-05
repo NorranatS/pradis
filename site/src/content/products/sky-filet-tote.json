@@ -1,0 +1,33 @@
+{
+  "no": 8,
+  "slug": "sky-filet-tote",
+  "name": {
+    "th": "ตาข่ายฟ้า",
+    "en": "Sky Filet Tote"
+  },
+  "category": "bag",
+  "priceFrom": 1190,
+  "materials": [
+    "cotton-cord"
+  ],
+  "technique": {
+    "th": "โครเชต์",
+    "en": "Crochet"
+  },
+  "hours": 18,
+  "size": "40 × 36 cm",
+  "colours": [
+    "sky"
+  ],
+  "status": "made-to-order",
+  "featured": false,
+  "images": [
+    "./images/sky-filet-tote.png"
+  ],
+  "story": {
+    "th": "กระเป๋าสะพายลายตาข่ายฟิเลต์ พร้อมพู่ลูกปัดถักมือ",
+    "en": "A filet-mesh shoulder tote with a hand-crocheted bead tassel."
+  },
+  "added": "2026-08-07",
+  "dummy": true
+}

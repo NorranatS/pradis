@@ -1,0 +1,33 @@
+{
+  "no": 12,
+  "slug": "olive-rope-tote",
+  "name": {
+    "th": "กระเป๋าเชือกฟอกสีมะกอก",
+    "en": "Olive Rope Tote"
+  },
+  "category": "bag",
+  "priceFrom": 990,
+  "materials": [
+    "rope-yarn"
+  ],
+  "technique": {
+    "th": "โครเชต์",
+    "en": "Crochet"
+  },
+  "hours": 12,
+  "size": "30 × 34 cm",
+  "colours": [
+    "olive"
+  ],
+  "status": "ready",
+  "featured": false,
+  "images": [
+    "./images/olive-rope-tote.png"
+  ],
+  "story": {
+    "th": "กระเป๋าทรงถังจากเชือกฟอก แข็งแรง ทรงสวย ติดกระดุมกะลา",
+    "en": "A sturdy bucket tote in rope yarn, closed with a coconut-shell button."
+  },
+  "added": "2026-07-11",
+  "dummy": true
+}

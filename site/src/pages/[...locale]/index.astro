@@ -1,0 +1,380 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import Thread from '../../components/Thread.astro';
+import maker from '../../assets/maker.jpg';
+import { links, site } from '../../config/site';
+import { t, href, digits, price, categories, materials, localePaths, type Lang } from '../../i18n';
+
+export const getStaticPaths = localePaths;
+const { lang } = Astro.props as { lang: Lang };
+const th = lang === 'th';
+
+const all = await getCollection('products');
+const byNew = [...all].sort((a, b) => b.data.added.localeCompare(a.data.added));
+const shelf = [...byNew.filter((p) => p.data.featured), ...byNew.filter((p) => !p.data.featured)].slice(0, 10);
+const hero = all.find((p) => p.data.slug === 'apricot-rope-tote') ?? byNew[0];
+const feat = all.find((p) => p.data.slug === 'sage-market-tote') ?? byNew[0];
+const welcome = [all.find((p) => p.data.slug === 'indigo-bloom'), all.find((p) => p.data.slug === 'sunflower-phone-pouch'), all.find((p) => p.data.slug === 'moon-filet-tote')].filter(Boolean);
+const count = (c: string) => all.filter((p) => p.data.category === c).length;
+const f = feat.data;
+const fLabel = `${f.name[lang]} (${t(lang, 'label.no')} ${digits(lang, f.no, 2)})`;
+---
+<Base lang={lang} onDark>
+  <!-- 1. Notebook cover that opens in 3D on scroll -->
+  <section class="cover-scene" id="cover-scene">
+    <div class="cover-sticky">
+      <div class="first-page">
+        <div class="wrap fp-grid">
+          <div>
+            <p class="sc">{th ? 'หน้า ๑ · ยินดีต้อนรับ' : 'Page one · Welcome'}</p>
+            <p class="fp-hello hand">{th ? 'สวัสดีค่ะ ยินดีต้อนรับสู่สมุดงานถักของแม่' : 'Hello, and welcome to Mom’s crochet notebook'}</p>
+            <p class="fp-lead">{th ? `ในสมุดเล่มนี้มีงานถักมือทั้งหมด ${digits(lang, all.length)} ชิ้น ทุกชิ้นทำทีละใบ เลื่อนลงไปดูได้เลย` : `There are ${all.length} handmade pieces in this notebook, each made one at a time. Scroll on to see them.`}</p>
+            <a class="btn ink" href={href(lang, '/collection')}>{t(lang, 'cta.seeAll')} →</a>
+          </div>
+          <div class="fp-collage" aria-hidden="true">
+            {welcome.map((w, i) => w && <div class={`fp-print sheet p${i}`}><Image src={w.data.images[0]} alt="" width={360} /></div>)}
+          </div>
+        </div>
+      </div>
+      <div class="cover" id="cover">
+        <div class="cover-front bookcloth">
+          <div class="ribbon" aria-hidden="true"></div>
+          <div class="wrap hero-grid">
+            <div>
+              <p class="sc light">{th ? 'สมุดงานถักของแม่ · เล่มที่ ๑' : 'Mom’s crochet notebook · Volume one'}</p>
+              <h1 class="foil">{th ? <>ถักด้วย<br>มือแม่</> : <>Made by<br><em>Mom’s hands</em></>}</h1>
+              <p class="lede">{site.tagline[lang]} {th ? 'ไม่มีใบไหนซ้ำ' : '— no two alike.'}</p>
+              <div class="ctas">
+                <a class="btn solid" href={href(lang, '/collection')}>{t(lang, 'cta.seeAll')}</a>
+                <button class="btn ghost light" data-order>{th ? 'สั่งทำ / ทักหาแม่ →' : 'Order / say hello →'}</button>
+              </div>
+            </div>
+            <div class="hero-bag">
+              <div class="under s1"></div>
+              <div class="under s2 kraftpaper"></div>
+              <a href={href(lang, `/collection/${hero.data.slug}`)} class="hero-pic" aria-label={hero.data.name[lang]}>
+                <Image src={hero.data.images[0]} alt={hero.data.name[lang]} width={760} loading="eager" />
+              </a>
+              <div class="tag" aria-hidden="true"><span class="string"></span><span class="card"><b>{digits(lang, hero.data.no, 2)}</b>{price(lang, hero.data.priceFrom)}</span></div>
+            </div>
+          </div>
+          <div class="wrap hero-foot">
+            <span class="dots"><span>{th ? 'ถักมือ 100%' : '100% handmade'}</span><span>{th ? 'ผ้าคราม & ไหมไทย' : 'Indigo & Thai silk'}</span><span>{t(lang, 'label.anyColour')}</span></span>
+            <span class="scroll-cue">{th ? 'เลื่อนเพื่อเปิดสมุด ↓' : 'Scroll to open ↓'}</span>
+          </div>
+        </div>
+        <div class="cover-back khit" aria-hidden="true"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. The shelf: every new piece in one swipeable row -->
+  <section class="shelf-sec">
+    <span class="deco scrap bookcloth pinked" style="width:200px;height:140px;right:-40px;top:30px;rotate:10deg" data-depth="-0.06"></span>
+    <div class="wrap shelf-head">
+      <div class="label-card sheet top reveal">
+        <p class="sc">{th ? 'ใหม่ในสมุด' : 'Fresh from the hook'}</p>
+        <h2>{th ? <>ชิ้นล่าสุด<em>ของแม่</em></> : <>Mom’s <em>latest</em></>}</h2>
+      </div>
+      <div class="shelf-side reveal d1">
+        <div class="cat-links">
+          {(['bag', 'accessory', 'tee'] as const).map((c) => (
+            <a class="chip" href={href(lang, `/collection?cat=${c}`)}>{categories[c][lang]} <small>{digits(lang, count(c))}</small></a>
+          ))}
+        </div>
+        <div class="arrows">
+          <button class="arrow" data-shelf="-1" aria-label="Previous">←</button>
+          <button class="arrow" data-shelf="1" aria-label="Next">→</button>
+        </div>
+      </div>
+    </div>
+    <div class="shelf" id="shelf">
+      {shelf.map((p, i) => <ProductCard product={p} lang={lang} index={i} layered={false} eager={i < 4} />)}
+      <a class="shelf-more sheet" href={href(lang, '/collection')}>
+        <span class="n">{digits(lang, all.length)}</span>
+        <span>{th ? 'ดูผลงานทั้งหมด →' : 'See every piece →'}</span>
+      </a>
+    </div>
+  </section>
+
+  <div class="stitched">
+    <Thread />
+
+    <!-- 3. Featured piece -->
+    <section class="featured">
+      <div class="wrap feat-grid">
+        <div class="stage" data-thread="5" data-ty="0.2">
+          <div class="under u1 kraftpaper"></div>
+          <div class="under u2"></div>
+          <span class="under bignum">{digits(lang, f.no, 2)}</span>
+          <a class="bag top" href={href(lang, `/collection/${f.slug}`)} data-tilt="5"><Image src={f.images[0]} alt={f.name[lang]} width={900} /></a>
+          <span class="chip-note top reveal d1" style="top:22%"><b>01</b>{th ? 'ถักมือทุกห่วง' : 'Every loop by hand'}</span>
+          <span class="chip-note top reveal d2" style="top:46%"><b>02</b>{th ? 'ลายตาข่าย V โปร่งเบา' : 'Light, open V-stitch'}</span>
+          <span class="chip-note top reveal d3" style="top:70%"><b>03</b>{t(lang, 'label.anyColour')}</span>
+        </div>
+        <div class="feat-card sheet top reveal d1">
+          <p class="sc">{th ? 'ชิ้นเด่นประจำเล่ม' : 'Featured piece'} · {digits(lang, f.no, 2)}</p>
+          <h2>{f.name[lang]}</h2>
+          <p class="pr">{price(lang, f.priceFrom)}</p>
+          <p class="desc">{f.story[lang]}</p>
+          <div class="hours"><b>{digits(lang, f.hours)}</b><span>{t(lang, 'unit.hoursLong')}</span></div>
+          <dl class="mini">
+            <dt>{t(lang, 'label.material')}</dt><dd>{f.materials.map((m) => materials[m]?.[lang]).join(', ')}</dd>
+            <dt>{t(lang, 'label.size')}</dt><dd>{f.size}</dd>
+          </dl>
+          <div class="row-cta">
+            <button class="btn ink" data-order={fLabel}>{t(lang, 'cta.order')} →</button>
+            <a class="link-arrow" href={href(lang, `/collection/${f.slug}`)}>{t(lang, 'cta.details')}</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. The big number -->
+    <section class="statement">
+      <div class="wrap" data-thread="96" data-ty="0.25">
+        <div class="under strip kraftpaper"></div>
+        <div class="panel bookcloth top reveal">
+          <span class="huge">{digits(lang, 20)}</span>
+          <div>
+            <h2>{th ? 'ชั่วโมง คือเวลาที่แม่ใช้ถักกระเป๋าหนึ่งใบ' : 'hours is what one bag takes from Mom’s hands'}</h2>
+            <p>{th ? 'ไม่มีเครื่องจักร ไม่มีแม่พิมพ์ มีแค่เข็มโครเชต์หนึ่งเล่ม เส้นด้าย และความตั้งใจ ทุกใบจึงมีใบเดียวในโลก' : 'No machines, no moulds. One hook, one thread and a lot of care, so every bag exists only once.'}</p>
+            <a class="btn ghost light" href={href(lang, '/story')}>{th ? 'อ่านเรื่องของแม่ →' : 'Read Mom’s story →'}</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Maker teaser -->
+    <section class="maker">
+      <div class="wrap maker-grid">
+        <div class="photo-wrap" data-thread="8" data-ty="0.25">
+          <div class="under cloth bookcloth"></div>
+          <figure class="print sheet top reveal" data-tilt="4">
+            <Image src={maker} alt={th ? 'แม่กับกระเป๋าที่ถักเอง' : 'Mom with one of her bags'} width={800} />
+            <figcaption class="hand">{th ? 'แม่ (ซ้าย) กับใบโปรด' : 'Mom (left) with a favourite'}</figcaption>
+          </figure>
+        </div>
+        <div class="quote-card sheet top reveal d1">
+          <p class="sc">{th ? 'ผู้ประดิษฐ์' : 'The maker'}</p>
+          <blockquote>{th ? <>“ของที่ทำด้วยมือ จะมี<em>หัวใจของคนทำ</em>ติดไปด้วยเสมอ”</> : <>“Something made by hand always carries <em>a little of the maker’s heart.</em>”</>}</blockquote>
+          <p class="sig hand">— {th ? 'แม่' : 'Mom'}</p>
+          <a class="link-arrow" href={href(lang, '/story')}>{t(lang, 'nav.story')} →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. How to order -->
+    <section class="howto">
+      <div class="wrap">
+        <div class="under strip2 linen"></div>
+        <div class="label-card sheet top reveal">
+          <p class="sc">{t(lang, 'nav.order')}</p>
+          <h2>{th ? <>สั่งทำง่าย ๆ <em>สามขั้นตอน</em></> : <>Ordering in <em>three easy steps</em></>}</h2>
+        </div>
+        <div class="steps" data-thread="55" data-ty="0.5">
+          <div class="step sheet top reveal"><div class="n">{digits(lang, 1)}</div><h3>{th ? 'เลือกชิ้นที่ชอบ' : 'Pick a piece'}</h3><p>{th ? 'จดชื่อหรือหมายเลขชิ้นงานไว้ เลือกสีเองได้' : 'Note its name or number. Choose any colour.'}</p></div>
+          <div class="step sheet top reveal d1"><div class="n">{digits(lang, 2)}</div><h3>{th ? 'ทักหาแม่' : 'Message Mom'}</h3><p>{th ? 'ทาง LINE, Instagram หรือ Facebook แม่ตอบเอง' : 'On LINE, Instagram or Facebook. Mom replies herself.'}</p></div>
+          <div class="step sheet top reveal d2"><div class="n">{digits(lang, 3)}</div><h3>{th ? 'รอรับของขวัญ' : 'Receive it'}</h3><p>{th ? 'พร้อมส่ง 2–3 วัน สั่งทำประมาณ 1–3 สัปดาห์' : 'Ready pieces ship in 2–3 days; made-to-order takes 1–3 weeks.'}</p></div>
+        </div>
+        <div class="channels-row reveal">
+          <a class="channel line sheet top" href={links.line} target="_blank" rel="noopener"><span class="ico">LINE</span><span><b>LINE</b><small>ID: {site.contact.lineId}</small></span></a>
+          <a class="channel ig sheet top" href={links.instagram} target="_blank" rel="noopener"><span class="ico">IG</span><span><b>Instagram</b><small>@{site.contact.instagram}</small></span></a>
+          <a class="channel fb sheet top" href={links.messenger} target="_blank" rel="noopener"><span class="ico">FB</span><span><b>Messenger</b><small>Facebook</small></span></a>
+        </div>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  /* ── Cover scene ── */
+  .cover-scene { position: relative; height: 185vh; }
+  .cover-sticky { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; perspective: 2400px; perspective-origin: 30% 50%; }
+  .first-page { position: absolute; inset: 0; z-index: 0; isolation: isolate; display: grid; align-items: center; padding-top: var(--header);
+    background: radial-gradient(900px 600px at 20% 30%, rgba(255,251,240,.9), transparent 60%), var(--paper-hi); }
+  .first-page::after { /* shadow cast by the opening cover */
+    content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(20,24,40,.45), transparent 60%); opacity: calc(1 - var(--open, 0)); }
+  .fp-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; }
+  .fp-hello { font-size: clamp(36px, 4.4vw, 64px); line-height: 1.25; margin: 14px 0 18px; }
+  :global(:lang(th)) .fp-hello { font-size: clamp(32px, 3.6vw, 52px); line-height: 1.5; }
+  .fp-lead { color: var(--muted); max-width: 44ch; margin: 0 0 28px; font-size: 18px; }
+  .fp-collage { position: relative; height: 440px; }
+  .fp-print { position: absolute; padding: 12px 12px 30px; width: 46%; }
+  .fp-print :global(img) { width: 100%; aspect-ratio: 1; object-fit: contain; background: var(--sage-pale); padding: 14%; }
+  .fp-print.p0 { left: 2%; top: 4%; rotate: -6deg; }
+  .fp-print.p1 { right: 2%; top: 0; rotate: 5deg; }
+  .fp-print.p1 :global(img) { background: var(--butter); }
+  .fp-print.p2 { left: 26%; top: 38%; rotate: -1deg; z-index: 2; }
+  .fp-print.p2 :global(img) { background: var(--apricot-pale); }
+
+  .cover { position: absolute; inset: 0; z-index: 1; transform-origin: left center; transform-style: preserve-3d; transform: rotateY(calc(var(--open, 0) * -104deg)); will-change: transform; }
+  .cover-front, .cover-back { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+  .cover-front { color: #EDE7DA; display: flex; flex-direction: column; padding-top: var(--header); box-shadow: 30px 0 60px rgba(0,0,0,.35); }
+  .cover-front::after { /* spine highlight */ content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 26px; background: linear-gradient(90deg, rgba(0,0,0,.35), rgba(255,255,255,.06) 60%, transparent); }
+  .cover-back { transform: rotateY(180deg); background-size: 32px 32px; }
+  .ribbon { position: absolute; top: 0; right: 2%; width: 34px; height: 46%; background: linear-gradient(90deg, #7E2418, #A9382A 45%, #8A2B1D); clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 92%, 0 100%); z-index: 2; }
+  .hero-grid { flex: 1; display: grid; grid-template-columns: 1.08fr .92fr; gap: 30px; align-items: center; }
+  .sc.light { color: #B8C1D9; }
+  .foil { margin-top: 18px; font-size: clamp(76px, 10.4vw, 168px); line-height: .92; letter-spacing: -.015em;
+    background: linear-gradient(100deg, #8C6622 0%, #E8CD8A 20%, #B98C3D 38%, #F4E4B4 52%, #A07732 70%, #DDBB70 88%, #9A7230 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 2px 0 rgba(0,0,0,.35)); }
+  :global(:lang(th)) .foil { font-size: clamp(64px, 8.8vw, 142px); line-height: 1.12; letter-spacing: 0; font-weight: 500; }
+  .lede { max-width: 40ch; margin: 26px 0 32px; font-size: 18px; color: #D3D9E8; }
+  .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn.light { color: #EDE7DA; }
+  .hero-bag { position: relative; height: min(64vh, 600px); min-height: 380px; }
+  .hero-bag .s1 { inset: 12% 10% 8% 14%; rotate: 5deg; background: var(--paper-hi); box-shadow: 0 30px 60px -30px rgba(0,0,0,.7); }
+  .hero-bag .s2 { inset: 20% 22% 2% 4%; rotate: -6deg; box-shadow: 0 30px 60px -30px rgba(0,0,0,.6); }
+  .hero-pic { position: absolute; z-index: 3; inset: 0 0 4% 0; display: grid; place-items: center; }
+  .hero-pic :global(img) { height: 94%; width: auto; rotate: -2deg; filter: drop-shadow(0 34px 30px rgba(5,10,25,.55)); transition: transform .8s var(--ease); }
+  .hero-pic:hover :global(img) { transform: scale(1.03) rotate(1deg); }
+  .tag { position: absolute; z-index: 4; right: 4%; top: 16%; transform-origin: 50% 0; animation: swing 6s ease-in-out infinite; }
+  .tag .string { display: block; width: 1px; height: 40px; margin: 0 auto; background: #CDBB97; }
+  .tag .card { display: block; width: 110px; padding: 18px 8px 12px; text-align: center; background: var(--kraft); color: var(--ink); font: 500 12px/1.3 var(--body); clip-path: polygon(22% 0, 78% 0, 100% 14%, 100% 100%, 0 100%, 0 14%); position: relative; }
+  .tag .card::before { content: ""; position: absolute; top: 7px; left: 50%; width: 8px; height: 8px; margin-left: -4px; border-radius: 50%; background: var(--kram-deep); box-shadow: 0 0 0 2px #E8DCC2; }
+  .tag .card b { display: block; font: 500 30px/1 var(--serif-th); color: var(--kram); margin-bottom: 4px; }
+  @keyframes swing { 0%,100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+  .hero-foot { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; padding: 22px 0 28px; border-top: 1px solid rgba(237,231,218,.18); font-size: 14px; color: #B8C1D9; }
+  .dots span + span::before { content: "·"; margin: 0 12px; opacity: .6; }
+  .scroll-cue { animation: bob 2.4s ease-in-out infinite; }
+  @keyframes bob { 50% { translate: 0 4px; } }
+
+  @media (max-width: 860px), (prefers-reduced-motion: reduce) {
+    .cover-scene { height: auto; }
+    .cover-sticky { position: relative; height: auto; overflow: visible; perspective: none; }
+    .first-page { display: none; }
+    .cover { position: relative; transform: none !important; }
+    .cover-front { position: relative; min-height: 100svh; }
+    .cover-back { display: none; }
+    .scroll-cue { display: none; }
+  }
+  @media (max-width: 860px) {
+    .hero-grid { grid-template-columns: 1fr; padding: 30px 0; }
+    .hero-bag { height: 380px; }
+    .ribbon { height: 18%; width: 26px; right: 30%; }
+  }
+
+  /* ── Shelf ── */
+  .shelf-sec { position: relative; padding: 110px 0 120px; }
+  .shelf-head { display: flex; justify-content: space-between; align-items: end; gap: 20px; flex-wrap: wrap; margin-bottom: 36px; }
+  .shelf-side { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+  .cat-links { display: flex; gap: 6px; flex-wrap: wrap; }
+  .cat-links .chip { text-decoration: none; }
+  .arrows { display: flex; gap: 8px; }
+  .arrow { width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--faint); background: var(--paper-hi); cursor: pointer; font-size: 18px; transition: background .3s, color .3s; }
+  .arrow:hover { background: var(--kram); color: #fff; }
+  .shelf { display: grid; grid-auto-flow: column; grid-auto-columns: clamp(220px, 21vw, 280px); gap: 26px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
+    padding: 30px max(20px, (100% - 1180px) / 2) 40px; scroll-padding-inline: max(20px, (100% - 1180px) / 2); scrollbar-width: none; }
+  .shelf::-webkit-scrollbar { display: none; }
+  .shelf :global(.pcard) { scroll-snap-align: start; }
+  .shelf-more { scroll-snap-align: start; display: grid; place-content: center; text-align: center; gap: 6px; text-decoration: none; color: var(--kram); background: var(--sage-pale); }
+  .shelf-more .n { font: 500 90px/1 var(--serif-th); color: var(--ochre); }
+  @media (min-width: 1100px) { .shelf { padding-inline: max(70px, (100% - 1180px) / 2); scroll-padding-inline: max(70px, (100% - 1180px) / 2); } }
+
+  /* ── Featured ── */
+  .featured { padding: 70px 0 120px; }
+  .feat-grid { display: grid; grid-template-columns: repeat(12, 1fr); align-items: center; }
+  .stage { grid-column: 1 / span 7; grid-row: 1; position: relative; height: 660px; }
+  .stage .u1 { inset: 4% 10% 10% 0; rotate: -3deg; }
+  .stage .u2 { inset: 14% 0 0 16%; rotate: 2deg; background: var(--sage-pale); box-shadow: var(--shadow); }
+  .stage .bignum { left: 2%; top: -6%; font: 500 clamp(160px, 20vw, 300px)/1 var(--serif-th); color: rgba(181,135,58,.22); }
+  .stage .bag { position: absolute !important; inset: 8% 4% 4% 18%; display: grid; place-items: center; }
+  .stage .bag :global(img) { max-height: 100%; width: auto; filter: drop-shadow(0 34px 28px rgba(36,30,26,.4)); rotate: -1.5deg; }
+  .chip-note { position: absolute !important; left: -2%; display: flex; align-items: center; gap: 10px; padding: 8px 14px; background: var(--paper-hi); box-shadow: var(--shadow); font-size: 14px; white-space: nowrap; }
+  .chip-note b { font: 500 13px var(--body); color: var(--ochre); }
+  .feat-card { grid-column: 7 / span 6; grid-row: 1; padding: clamp(34px, 4vw, 56px); margin-left: -20px; rotate: .6deg; }
+  .feat-card h2 { font-size: clamp(46px, 5.4vw, 80px); margin: 14px 0 8px; }
+  :global(:lang(th)) .feat-card h2 { font-size: clamp(36px, 4vw, 58px); }
+  .pr { font: 500 20px var(--body); color: var(--ochre); margin: 0 0 12px; }
+  .desc { color: var(--muted); margin: 0; max-width: 44ch; }
+  .hours { display: flex; align-items: baseline; gap: 14px; margin: 22px 0 6px; padding: 16px 0; border-block: 1px solid var(--faint); }
+  .hours b { font: 500 60px/1 var(--serif-th); color: var(--ochre); }
+  .hours span { color: var(--muted); }
+  .mini { display: grid; grid-template-columns: auto 1fr; gap: 4px 20px; font-size: 15px; margin: 14px 0 26px; }
+  .mini dt { color: var(--muted); }
+  .mini dd { margin: 0; }
+  .row-cta { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+  @media (max-width: 900px) {
+    .stage, .feat-card { grid-column: 1 / -1; grid-row: auto; }
+    .stage { height: 460px; }
+    .feat-card { margin: -40px 8px 0; }
+    .chip-note { left: 0; }
+  }
+
+  /* ── Statement ── */
+  .statement { padding: 40px 0 130px; }
+  .statement .strip { left: 6%; right: 12%; top: -30px; bottom: 50px; rotate: -2.2deg; }
+  .panel { color: #EDE7DA; display: grid; grid-template-columns: auto 1fr; gap: clamp(30px, 5vw, 80px); align-items: center; padding: clamp(50px, 7vw, 100px) clamp(30px, 6vw, 90px); rotate: 1deg; box-shadow: 0 40px 70px -40px rgba(5,10,25,.8); }
+  .huge { font: 500 clamp(150px, 21vw, 320px)/.82 var(--serif-th); color: #E2C47E; }
+  .panel h2 { font-size: clamp(34px, 4.2vw, 62px); }
+  :global(:lang(th)) .panel h2 { font-size: clamp(28px, 3.2vw, 46px); }
+  .panel p { color: #C3CBE0; max-width: 42ch; margin: 18px 0 26px; }
+  @media (max-width: 760px) { .panel { grid-template-columns: 1fr; } }
+
+  /* ── Maker ── */
+  .maker { padding: 30px 0 140px; }
+  .maker-grid { display: grid; grid-template-columns: repeat(12, 1fr); align-items: center; }
+  .photo-wrap { grid-column: 1 / span 6; grid-row: 1; position: relative; }
+  .photo-wrap .cloth { inset: -40px 40px 60px -40px; rotate: -3deg; box-shadow: 0 30px 60px -30px rgba(5,10,25,.6); }
+  .print { margin: 0; padding: 16px 16px 50px; rotate: 1.6deg; }
+  .print :global(img) { width: 100%; aspect-ratio: 1; object-fit: cover; object-position: 20% 35%; }
+  .print figcaption { position: absolute; left: 16px; right: 16px; bottom: 12px; font-size: 20px; }
+  .quote-card { grid-column: 6 / span 7; grid-row: 1; padding: clamp(40px, 5vw, 70px); margin-left: -10px; rotate: -1deg; }
+  .quote-card blockquote { margin: 18px 0 0; font: 500 clamp(32px, 3.6vw, 52px)/1.25 var(--display); }
+  :global(:lang(th)) .quote-card blockquote { font: 400 clamp(26px, 2.8vw, 40px)/1.7 var(--serif-th); }
+  .quote-card blockquote :global(em) { color: var(--terra); }
+  .sig { font-size: 28px; margin: 16px 0 18px; }
+  @media (max-width: 900px) { .photo-wrap, .quote-card { grid-column: 1 / -1; grid-row: auto; } .quote-card { margin: -30px 8px 0; } .photo-wrap .cloth { inset: -20px 20px 40px -10px; } }
+
+  /* ── How to order ── */
+  .howto { padding: 20px 0 140px; }
+  .strip2 { left: -3%; right: 4%; top: 46%; height: 200px; rotate: 1.2deg; box-shadow: var(--shadow); }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 40px; }
+  .step { padding: 32px 30px 34px; }
+  .step:nth-child(1) { rotate: -1.4deg; }
+  .step:nth-child(2) { rotate: 1deg; margin-top: 50px; }
+  .step:nth-child(3) { rotate: -.8deg; margin-top: 16px; }
+  .step .n { font: 500 64px/1 var(--serif-th); color: var(--ochre); }
+  .step h3 { font-size: 30px; margin: 14px 0 6px; }
+  :global(:lang(th)) .step h3 { font-size: 22px; }
+  .step p { margin: 0; color: var(--muted); font-size: 15px; }
+  .channels-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 60px; }
+  .channels-row .channel { border: 0; }
+  @media (max-width: 760px) { .steps, .channels-row { grid-template-columns: 1fr; } .step { margin-top: 0 !important; } }
+</style>
+
+<script>
+  // Open the cover as the visitor scrolls the first screen
+  const scene = document.getElementById('cover-scene')!;
+  const cover = document.getElementById('cover')!;
+  const motion = matchMedia('(min-width: 861px) and (prefers-reduced-motion: no-preference)');
+  const ease = (x: number) => 1 - Math.pow(1 - x, 3);
+  function openCover() {
+    if (!motion.matches) { scene.style.removeProperty('--open'); return; }
+    const r = scene.getBoundingClientRect();
+    const span = r.height - innerHeight;
+    const p = Math.min(1, Math.max(0, -r.top / (span * 0.75)));
+    scene.style.setProperty('--open', ease(p).toFixed(4));
+    cover.style.pointerEvents = p > 0.5 ? 'none' : '';
+  }
+  let tick = false;
+  addEventListener('scroll', () => { if (tick) return; tick = true; requestAnimationFrame(() => { openCover(); tick = false; }); }, { passive: true });
+  addEventListener('resize', openCover);
+  openCover();
+
+  // Shelf arrows
+  const shelf = document.getElementById('shelf')!;
+  document.querySelectorAll<HTMLElement>('[data-shelf]').forEach((b) => b.addEventListener('click', () => {
+    shelf.scrollBy({ left: Number(b.dataset.shelf) * shelf.clientWidth * 0.8 });
+  }));
+  // Drag to scroll on desktop
+  let down = false, startX = 0, startLeft = 0, moved = false;
+  shelf.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') return; down = true; moved = false; startX = e.clientX; startLeft = shelf.scrollLeft; shelf.style.scrollSnapType = 'none'; });
+  addEventListener('pointermove', (e) => { if (!down) return; const dx = e.clientX - startX; if (Math.abs(dx) > 4) moved = true; shelf.scrollLeft = startLeft - dx; });
+  addEventListener('pointerup', () => { if (!down) return; down = false; shelf.style.scrollSnapType = ''; });
+  shelf.addEventListener('click', (e) => { if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; } }, true);
+</script>

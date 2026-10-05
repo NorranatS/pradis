@@ -1,0 +1,34 @@
+{
+  "no": 21,
+  "slug": "peony-phone-pouch",
+  "name": {
+    "th": "ถุงมือถือดอกโบตั๋น",
+    "en": "Peony Phone Pouch"
+  },
+  "category": "accessory",
+  "priceFrom": 390,
+  "materials": [
+    "cotton-yarn"
+  ],
+  "technique": {
+    "th": "โครเชต์",
+    "en": "Crochet"
+  },
+  "hours": 8,
+  "size": "11 × 19 cm",
+  "colours": [
+    "rose",
+    "cream"
+  ],
+  "status": "made-to-order",
+  "featured": false,
+  "images": [
+    "./images/peony-phone-pouch.png"
+  ],
+  "story": {
+    "th": "ถุงใส่มือถือลายกรานนี่สแควร์ สายสะพายถักมือ",
+    "en": "A granny-square phone pouch with a hand-crocheted strap."
+  },
+  "added": "2026-08-03",
+  "dummy": true
+}

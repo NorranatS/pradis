@@ -1,0 +1,33 @@
+{
+  "no": 2,
+  "slug": "rose-market-tote",
+  "name": {
+    "th": "กระเป๋าตลาดสีกุหลาบ",
+    "en": "Rose Market Tote"
+  },
+  "category": "bag",
+  "priceFrom": 1290,
+  "materials": [
+    "cotton-yarn"
+  ],
+  "technique": {
+    "th": "โครเชต์",
+    "en": "Crochet"
+  },
+  "hours": 16,
+  "size": "38 × 32 cm",
+  "colours": [
+    "rose"
+  ],
+  "status": "made-to-order",
+  "featured": false,
+  "images": [
+    "./images/rose-market-tote.png"
+  ],
+  "story": {
+    "th": "ใบใหญ่ใส่ของได้เยอะ ลายตาข่ายโปร่ง น้ำหนักเบา ถือไปตลาดหรือไปทำงานก็สวย",
+    "en": "Roomy and light in an open V-stitch, as lovely at the market as at work."
+  },
+  "added": "2026-08-11",
+  "dummy": true
+}

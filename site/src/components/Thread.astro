@@ -1,0 +1,15 @@
+---
+// Drop inside a .stitched container. Anchors: any descendant with data-thread="x%" (and optional data-ty).
+---
+<div class="thread-layer" aria-hidden="true"><svg>
+  <defs><filter id="yarnShadow" x="-5%" y="-5%" width="110%" height="110%"><feDropShadow dx="0" dy="2" stdDeviation="1.4" flood-color="#241E1A" flood-opacity=".35"/></filter></defs>
+  <g filter="url(#yarnShadow)">
+    <path fill="none" stroke="#2E4A86" stroke-width="4" stroke-linecap="round"/>
+    <path fill="none" stroke="#6F8AC4" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="3 5"/>
+  </g>
+</svg></div>
+<div class="holes-layer" aria-hidden="true"><svg><g></g></svg></div>
+<script>
+  import { stitch } from '../scripts/thread';
+  document.querySelectorAll<HTMLElement>('.stitched').forEach(stitch);
+</script>

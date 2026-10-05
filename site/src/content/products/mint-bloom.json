@@ -1,0 +1,35 @@
+{
+  "no": 17,
+  "slug": "mint-bloom",
+  "name": {
+    "th": "กระเป๋าดอกครามสีมิ้นต์",
+    "en": "Mint Bloom"
+  },
+  "category": "bag",
+  "priceFrom": 890,
+  "materials": [
+    "cotton-cord",
+    "indigo-cloth"
+  ],
+  "technique": {
+    "th": "โครเชต์",
+    "en": "Crochet"
+  },
+  "hours": 20,
+  "size": "24 × 16 cm",
+  "colours": [
+    "mint",
+    "indigo"
+  ],
+  "status": "made-to-order",
+  "featured": false,
+  "images": [
+    "./images/mint-bloom.png"
+  ],
+  "story": {
+    "th": "กระเป๋าทรงกลมนุ่ม ประดับดอกไม้ผ้าครามที่แม่พับเองทีละกลีบ",
+    "en": "A soft rounded bag with an indigo-cloth flower Mom folds petal by petal."
+  },
+  "added": "2026-07-16",
+  "dummy": true
+}

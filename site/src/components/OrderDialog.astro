@@ -1,0 +1,32 @@
+---
+import { links, site } from '../config/site';
+import { t, type Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+---
+<dialog id="order-dialog" aria-labelledby="order-title"
+  data-msg-general={t(lang, 'order.general')}
+  data-msg-piece={t(lang, 'order.piece')}
+  data-msg-end={t(lang, 'order.pieceEnd')}
+  data-copied={t(lang, 'order.copied')}>
+  <div class="dialog-sheet sheet order-sheet">
+    <button class="dialog-close" data-close aria-label={t(lang, 'order.close')}>×</button>
+    <p class="sc">{site.name[lang]}</p>
+    <h2 id="order-title">{t(lang, 'order.title')}</h2>
+    <p>{t(lang, 'order.lead')}</p>
+    <p class="order-msg" data-msg></p>
+    <div class="channels">
+      <a class="channel line" href={links.line} target="_blank" rel="noopener" data-channel>
+        <span class="ico">LINE</span><span><b>LINE</b><small>ID: {site.contact.lineId}</small></span>
+      </a>
+      <a class="channel ig" href={links.instagram} target="_blank" rel="noopener" data-channel>
+        <span class="ico">IG</span><span><b>Instagram</b><small>@{site.contact.instagram}</small></span>
+      </a>
+      <a class="channel fb" href={links.messenger} target="_blank" rel="noopener" data-channel>
+        <span class="ico">FB</span><span><b>Messenger</b><small>Facebook</small></span>
+      </a>
+    </div>
+    <button class="btn ghost order-copy" data-copy>{t(lang, 'order.copy')}</button>
+  </div>
+</dialog>

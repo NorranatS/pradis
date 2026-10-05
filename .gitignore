@@ -1,0 +1,10 @@
+# Private: family photos, screenshots and design explorations stay local
+references/
+mockups/
+.claude/
+
+# Build output and dependencies
+node_modules/
+dist/
+.astro/
+.DS_Store

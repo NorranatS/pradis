@@ -1,0 +1,35 @@
+{
+  "no": 18,
+  "slug": "blush-bloom",
+  "name": {
+    "th": "กระเป๋าดอกครามสีชมพู",
+    "en": "Blush Bloom"
+  },
+  "category": "bag",
+  "priceFrom": 890,
+  "materials": [
+    "cotton-cord",
+    "indigo-cloth"
+  ],
+  "technique": {
+    "th": "โครเชต์",
+    "en": "Crochet"
+  },
+  "hours": 20,
+  "size": "24 × 16 cm",
+  "colours": [
+    "blush",
+    "indigo"
+  ],
+  "status": "made-to-order",
+  "featured": false,
+  "images": [
+    "./images/blush-bloom.png"
+  ],
+  "story": {
+    "th": "กระเป๋าทรงกลมนุ่ม ประดับดอกไม้ผ้าครามที่แม่พับเองทีละกลีบ",
+    "en": "A soft rounded bag with an indigo-cloth flower Mom folds petal by petal."
+  },
+  "added": "2026-07-17",
+  "dummy": true
+}

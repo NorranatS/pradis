@@ -1,0 +1,344 @@
+---
+import { getCollection } from 'astro:content';
+import { getImage } from 'astro:assets';
+import Base from '../../../layouts/Base.astro';
+import ProductCard from '../../../components/ProductCard.astro';
+import { t, href, digits, price, categories, statuses, colours, materials, localePaths, type Lang } from '../../../i18n';
+
+export const getStaticPaths = localePaths;
+const { lang } = Astro.props as { lang: Lang };
+
+const all = (await getCollection('products')).sort((a, b) => b.data.added.localeCompare(a.data.added) || a.data.no - b.data.no);
+const count = (c?: string) => (c ? all.filter((p) => p.data.category === c).length : all.length);
+const usedColours = [...new Set(all.flatMap((p) => p.data.colours))];
+const usedMaterials = [...new Set(all.flatMap((p) => p.data.materials))];
+
+const catalog = await Promise.all(all.map(async (e, i) => {
+  const p = e.data;
+  const big = await getImage({ src: p.images[0], width: 900 });
+  return {
+    slug: p.slug, order: i, no: digits(lang, p.no, 2), title: p.name[lang],
+    cat: p.category, priceNum: p.priceFrom, price: price(lang, p.priceFrom),
+    status: p.status, statusLabel: statuses[p.status][lang],
+    colours: p.colours, colourNames: p.colours.map((c) => colours[c]?.[lang] ?? c), colourHex: p.colours.map((c) => colours[c]?.hex ?? '#ccc'),
+    materials: p.materials, materialNames: p.materials.map((m) => materials[m]?.[lang] ?? m).join(', '),
+    hours: digits(lang, p.hours), size: p.size, technique: p.technique[lang], story: p.story[lang],
+    img: big.src, url: href(lang, `/collection/${p.slug}`), added: p.added,
+    orderLabel: `${p.name[lang]} (${t(lang, 'label.no')} ${digits(lang, p.no, 2)})`,
+    search: [p.name.th, p.name.en, ...p.colours.flatMap((c) => [colours[c]?.th, colours[c]?.en, c]), ...p.materials.flatMap((m) => [materials[m]?.th, materials[m]?.en]), categories[p.category].th, categories[p.category].en].join(' ').toLowerCase(),
+  };
+}));
+const labels = {
+  material: t(lang, 'label.material'), technique: t(lang, 'label.technique'), size: t(lang, 'label.size'),
+  colours: t(lang, 'label.colours'), time: t(lang, 'label.time'), hours: t(lang, 'unit.hours'), no: t(lang, 'label.no'),
+};
+---
+<Base lang={lang} title={t(lang, 'nav.collection')}>
+  <section class="page-head">
+    <span class="deco scrap bookcloth pinked" style="width:220px;height:150px;right:6%;top:110px;rotate:8deg" data-depth="-0.08"></span>
+    <span class="deco scrap kraftpaper" style="width:160px;height:110px;right:20%;top:170px;rotate:-6deg" data-depth="-0.04"></span>
+    <div class="wrap">
+      <div class="label-card sheet top reveal">
+        <p class="sc">{lang === 'th' ? 'สมุดงานถักของแม่' : 'Mom’s crochet notebook'}</p>
+        <h1>{lang === 'th' ? <>ผลงาน<em>ทั้งหมด</em></> : <>The <em>collection</em></>}</h1>
+        <p>{lang === 'th' ? `ทั้งหมด ${digits(lang, all.length)} ชิ้น ทุกชิ้นถักมือ สั่งทำในสีที่ชอบได้` : `${all.length} handmade pieces. Most can be made in your colour.`}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="collection-page">
+    <div class="wrap">
+      <div class="toolbar sheet top" id="toolbar">
+        <div class="tb-row">
+          <label class="search">
+            <span class="sr-only">{t(lang, 'filter.search')}</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input type="search" id="q" placeholder={t(lang, 'filter.search')} autocomplete="off">
+          </label>
+          <div class="cats" role="group" aria-label="Category">
+            <button class="chip" data-cat="" aria-pressed="true">{t(lang, 'filter.all')} <small>{digits(lang, count())}</small></button>
+            {(['bag', 'accessory', 'tee'] as const).map((c) => (
+              <button class="chip" data-cat={c} aria-pressed="false">{categories[c][lang]} <small>{digits(lang, count(c))}</small></button>
+            ))}
+          </div>
+          <button class="chip more" id="more-toggle" aria-expanded="false" aria-controls="more">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+            {lang === 'th' ? 'ตัวกรอง' : 'Filters'} <span class="dot" hidden></span>
+          </button>
+          <label class="sort">
+            <span class="sr-only">{t(lang, 'filter.sort')}</span>
+            <select id="sort">
+              <option value="new">{t(lang, 'filter.newest')}</option>
+              <option value="low">{t(lang, 'filter.priceLow')}</option>
+              <option value="high">{t(lang, 'filter.priceHigh')}</option>
+            </select>
+          </label>
+        </div>
+        <div class="more-panel" id="more" hidden>
+          <fieldset>
+            <legend>{t(lang, 'filter.colour')}</legend>
+            <div class="swatches">
+              {usedColours.map((c) => (
+                <button class="swatch-btn" data-colour={c} aria-pressed="false" title={colours[c]?.[lang]}>
+                  <i style={`background:${colours[c]?.hex}`}></i><span>{colours[c]?.[lang]}</span>
+                </button>
+              ))}
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>{t(lang, 'filter.material')}</legend>
+            <div class="chips">{usedMaterials.map((m) => <button class="chip" data-mat={m} aria-pressed="false">{materials[m]?.[lang]}</button>)}</div>
+          </fieldset>
+          <fieldset>
+            <legend>{t(lang, 'filter.status')}</legend>
+            <div class="chips">{(['ready', 'made-to-order', 'coming-soon'] as const).map((s) => <button class="chip" data-status={s} aria-pressed="false">{statuses[s][lang]}</button>)}</div>
+          </fieldset>
+        </div>
+      </div>
+
+      <div class="result-line">
+        <span><b id="count">{digits(lang, all.length)}</b> {t(lang, 'filter.count')}</span>
+        <button class="link-arrow clear" id="clear" hidden>{t(lang, 'filter.clear')}</button>
+      </div>
+
+      <div class="pgrid" id="grid">
+        {all.map((p, i) => <ProductCard product={p} lang={lang} index={i} eager={i < 8} />)}
+      </div>
+      <div class="empty sheet" id="empty" hidden>
+        <p class="hand">{t(lang, 'filter.empty')}</p>
+        <button class="btn ghost small" data-clear>{t(lang, 'filter.clear')}</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick view -->
+  <dialog id="quick" class="quick" aria-label="Quick view">
+    <div class="dialog-sheet sheet qv">
+      <button class="dialog-close" data-close aria-label={t(lang, 'order.close')}>×</button>
+      <div class="qv-pic">
+        <div class="qv-ground" data-tilt="5"><img alt="" data-f="img"></div>
+        <div class="qv-nav">
+          <button class="qv-arrow" data-step="-1" aria-label="Previous">←</button>
+          <button class="qv-arrow" data-step="1" aria-label="Next">→</button>
+        </div>
+      </div>
+      <div class="qv-info">
+        <p class="sc"><span>{labels.no}</span> <span data-f="no"></span> · <span data-f="statusLabel"></span></p>
+        <h2 data-f="title"></h2>
+        <p class="qv-price" data-f="price"></p>
+        <p class="qv-story" data-f="story"></p>
+        <dl class="qv-specs">
+          <dt>{labels.material}</dt><dd data-f="materialNames"></dd>
+          <dt>{labels.technique}</dt><dd data-f="technique"></dd>
+          <dt>{labels.size}</dt><dd data-f="size"></dd>
+          <dt>{labels.time}</dt><dd><span data-f="hours"></span> {labels.hours}</dd>
+          <dt>{labels.colours}</dt><dd data-f="colourNames"></dd>
+        </dl>
+        <div class="qv-cta">
+          <button class="btn solid" data-order data-f-order>{t(lang, 'cta.order')}</button>
+          <a class="btn ghost" data-f-url>{t(lang, 'cta.details')}</a>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <script type="application/json" id="catalog" set:html={JSON.stringify(catalog)} />
+</Base>
+
+<style>
+  .page-head { padding-bottom: 30px; }
+  .collection-page { padding-bottom: 120px; }
+  .toolbar { position: sticky; top: calc(var(--header) + 12px); z-index: 20; padding: 14px; margin-bottom: 22px; }
+  .tb-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .search { flex: 1 1 260px; display: flex; align-items: center; gap: 10px; padding: 0 16px; height: 46px; border-radius: 999px; background: var(--paper); color: var(--muted); }
+  .search input { flex: 1; min-width: 0; border: 0; background: none; font: inherit; color: var(--ink); outline: none; }
+  .cats { display: flex; gap: 6px; flex-wrap: wrap; }
+  .more .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ochre); }
+  .sort select { height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--faint); background: var(--paper-hi); font: inherit; font-size: 14px; color: var(--ink); }
+  .more-panel { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 20px; padding: 18px 6px 6px; border-top: 1px dashed var(--faint); margin-top: 14px; }
+  .more-panel[hidden] { display: none; }
+  fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+  legend { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+  .swatches, .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .swatch-btn { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 4px; border-radius: 999px; border: 1px solid var(--faint); background: var(--paper-hi); cursor: pointer; font-size: 13px; }
+  .swatch-btn i { width: 22px; height: 22px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0,0,0,.12); }
+  .swatch-btn[aria-pressed="true"] { border-color: var(--ink); box-shadow: 0 0 0 1px var(--ink); }
+  .result-line { display: flex; justify-content: space-between; align-items: baseline; margin: 0 4px 26px; color: var(--muted); font-size: 15px; }
+  .result-line b { color: var(--ink); font-weight: 500; }
+  .clear { background: none; border: 0; cursor: pointer; font-size: 14px; }
+  .pgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px 28px; }
+  .pgrid :global(.pcard[hidden]) { display: none; }
+  .empty { padding: 50px; text-align: center; }
+  .empty .hand { font-size: 24px; margin: 0 0 16px; }
+  @media (max-width: 1100px) { .pgrid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 760px) {
+    .pgrid { grid-template-columns: repeat(2, 1fr); gap: 26px 16px; }
+    .toolbar { top: calc(var(--header) + 6px); padding: 10px; }
+    .cats { order: 3; width: 100%; overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; }
+    .more-panel { grid-template-columns: 1fr; }
+    .sort select { max-width: 150px; }
+  }
+
+  /* Quick view */
+  .quick { max-width: min(1000px, 100% - 24px); }
+  .qv { display: grid; grid-template-columns: 1.05fr 1fr; }
+  .qv-pic { position: relative; padding: 16px; }
+  .qv-ground { aspect-ratio: 1; display: grid; place-items: center; background: var(--sage-pale); }
+  .qv-ground img { width: 80%; height: 80%; object-fit: contain; filter: drop-shadow(0 30px 24px rgba(36,30,26,.35)); }
+  .qv-nav { position: absolute; left: 30px; bottom: 30px; display: flex; gap: 8px; }
+  .qv-arrow { width: 44px; height: 44px; border-radius: 50%; border: 0; background: var(--paper-hi); box-shadow: var(--shadow); cursor: pointer; font-size: 18px; }
+  .qv-info { padding: 44px 40px 36px 24px; }
+  .qv-info h2 { font-size: clamp(36px, 4vw, 54px); margin: 10px 0 6px; }
+  :global(:lang(th)) .qv-info h2 { font-size: clamp(28px, 3vw, 40px); }
+  .qv-price { font: 500 20px var(--body); color: var(--ochre); margin: 0 0 14px; }
+  .qv-story { color: var(--muted); margin: 0 0 18px; }
+  .qv-specs { display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; font-size: 15px; margin: 0 0 26px; padding: 16px 0; border-block: 1px solid var(--faint); }
+  .qv-specs dt { color: var(--muted); }
+  .qv-specs dd { margin: 0; }
+  .qv-cta { display: flex; flex-wrap: wrap; gap: 10px; }
+  @media (max-width: 760px) { .qv { grid-template-columns: 1fr; } .qv-info { padding: 10px 22px 26px; } }
+</style>
+
+<script>
+  import { bindTilt } from '../../../scripts/site';
+
+  type Item = Record<string, any>;
+  const data: Item[] = JSON.parse(document.getElementById('catalog')!.textContent || '[]');
+  const bySlug = new Map(data.map((d) => [d.slug, d]));
+  const grid = document.getElementById('grid')!;
+  const cards = new Map([...grid.querySelectorAll<HTMLElement>('.pcard')].map((c) => [c.dataset.slug!, c]));
+  const q = document.getElementById('q') as HTMLInputElement;
+  const sort = document.getElementById('sort') as HTMLSelectElement;
+  const countEl = document.getElementById('count')!;
+  const clearBtn = document.getElementById('clear')!;
+  const empty = document.getElementById('empty')!;
+  const more = document.getElementById('more')!;
+  const moreToggle = document.getElementById('more-toggle')!;
+  const thai = document.documentElement.lang === 'th';
+  const fmt = (n: number) => (thai ? String(n).replace(/\d/g, (d) => '๐๑๒๓๔๕๖๗๘๙'[+d]) : String(n));
+
+  const state = { cat: '', q: '', colour: new Set<string>(), mat: new Set<string>(), status: new Set<string>(), sort: 'new' };
+  let visible: string[] = data.map((d) => d.slug);
+
+  function readUrl() {
+    const u = new URLSearchParams(location.search);
+    state.cat = u.get('cat') || '';
+    state.q = u.get('q') || '';
+    state.sort = u.get('sort') || 'new';
+    (['colour', 'mat', 'status'] as const).forEach((k) => { state[k] = new Set((u.get(k) || '').split(',').filter(Boolean)); });
+  }
+  function writeUrl(extra?: { p?: string | null }) {
+    const u = new URLSearchParams();
+    if (state.cat) u.set('cat', state.cat);
+    if (state.q) u.set('q', state.q);
+    if (state.sort !== 'new') u.set('sort', state.sort);
+    (['colour', 'mat', 'status'] as const).forEach((k) => state[k].size && u.set(k, [...state[k]].join(',')));
+    const p = extra?.p !== undefined ? extra.p : new URLSearchParams(location.search).get('p');
+    if (p) u.set('p', p);
+    const s = u.toString();
+    history.replaceState(null, '', location.pathname + (s ? '?' + s : ''));
+  }
+
+  function syncControls() {
+    q.value = state.q; sort.value = state.sort;
+    document.querySelectorAll<HTMLElement>('[data-cat]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.cat === state.cat)));
+    document.querySelectorAll<HTMLElement>('[data-colour]').forEach((b) => b.setAttribute('aria-pressed', String(state.colour.has(b.dataset.colour!))));
+    document.querySelectorAll<HTMLElement>('[data-mat]').forEach((b) => b.setAttribute('aria-pressed', String(state.mat.has(b.dataset.mat!))));
+    document.querySelectorAll<HTMLElement>('[data-status]').forEach((b) => b.setAttribute('aria-pressed', String(state.status.has(b.dataset.status!))));
+    const extra = state.colour.size + state.mat.size + state.status.size;
+    moreToggle.querySelector<HTMLElement>('.dot')!.hidden = !extra;
+  }
+
+  function apply() {
+    const words = state.q.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    let list = data.filter((d) =>
+      (!state.cat || d.cat === state.cat) &&
+      (!state.colour.size || d.colours.some((c: string) => state.colour.has(c))) &&
+      (!state.mat.size || d.materials.some((m: string) => state.mat.has(m))) &&
+      (!state.status.size || state.status.has(d.status)) &&
+      words.every((w) => d.search.includes(w)));
+    if (state.sort === 'low') list = list.sort((a, b) => a.priceNum - b.priceNum || a.order - b.order);
+    else if (state.sort === 'high') list = list.sort((a, b) => b.priceNum - a.priceNum || a.order - b.order);
+    else list = list.sort((a, b) => Number(a.status === 'coming-soon') - Number(b.status === 'coming-soon') || a.order - b.order);
+    visible = list.map((d) => d.slug);
+    const show = new Set(visible);
+    cards.forEach((el, slug) => { el.hidden = !show.has(slug); });
+    visible.forEach((slug) => grid.appendChild(cards.get(slug)!));
+    countEl.textContent = fmt(visible.length);
+    empty.hidden = visible.length > 0;
+    const filtered = state.cat || state.q || state.colour.size || state.mat.size || state.status.size;
+    clearBtn.hidden = !filtered;
+    syncControls();
+    writeUrl();
+    // newly shown cards may still be waiting to reveal
+    grid.querySelectorAll('.pcard:not([hidden]):not(.in)').forEach((el) => el.classList.add('in'));
+  }
+
+  function clearAll() {
+    Object.assign(state, { cat: '', q: '', sort: 'new' });
+    state.colour.clear(); state.mat.clear(); state.status.clear();
+    apply();
+  }
+
+  document.addEventListener('click', (e) => {
+    const t = e.target as HTMLElement;
+    const cat = t.closest<HTMLElement>('[data-cat]');
+    if (cat) { state.cat = cat.dataset.cat || ''; apply(); return; }
+    for (const [attr, key] of [['colour', 'colour'], ['mat', 'mat'], ['status', 'status']] as const) {
+      const b = t.closest<HTMLElement>(`[data-${attr}]`);
+      if (b) { const v = b.dataset[attr]!; state[key].has(v) ? state[key].delete(v) : state[key].add(v); apply(); return; }
+    }
+    if (t.closest('#clear, [data-clear]')) { clearAll(); return; }
+    if (t.closest('#more-toggle')) {
+      more.hidden = !more.hidden;
+      moreToggle.setAttribute('aria-expanded', String(!more.hidden));
+      return;
+    }
+    const quickLink = t.closest<HTMLElement>('[data-quick]');
+    if (quickLink && !(e as MouseEvent).metaKey && !(e as MouseEvent).ctrlKey) { e.preventDefault(); openQuick(quickLink.dataset.quick!); }
+  });
+  let qTimer = 0;
+  q.addEventListener('input', () => { clearTimeout(qTimer); qTimer = window.setTimeout(() => { state.q = q.value; apply(); }, 120); });
+  sort.addEventListener('change', () => { state.sort = sort.value; apply(); });
+
+  /* Quick view */
+  const dlg = document.getElementById('quick') as HTMLDialogElement;
+  let current = '';
+  function fill(slug: string) {
+    const d = bySlug.get(slug); if (!d) return;
+    current = slug;
+    dlg.querySelectorAll<HTMLElement>('[data-f]').forEach((el) => {
+      const k = el.dataset.f!;
+      const v = Array.isArray(d[k]) ? d[k].join(', ') : d[k];
+      if (el instanceof HTMLImageElement) { el.src = d.img; el.alt = d.title; } else el.textContent = v ?? '';
+    });
+    const order = dlg.querySelector<HTMLElement>('[data-f-order]')!;
+    order.dataset.order = d.orderLabel;
+    order.hidden = d.status === 'coming-soon';
+    dlg.querySelector<HTMLAnchorElement>('[data-f-url]')!.href = d.url;
+    const ground = dlg.querySelector<HTMLElement>('.qv-ground')!;
+    ground.style.background = getComputedStyle(cards.get(slug)!.querySelector('.ground')!).backgroundColor;
+    writeUrl({ p: slug });
+  }
+  function openQuick(slug: string) { fill(slug); if (!dlg.open) dlg.showModal(); bindTilt(dlg); }
+  dlg.addEventListener('close', () => writeUrl({ p: null }));
+  dlg.addEventListener('click', (e) => {
+    const step = (e.target as HTMLElement).closest<HTMLElement>('[data-step]');
+    if (!step) return;
+    const i = visible.indexOf(current);
+    const next = visible[(i + Number(step.dataset.step) + visible.length) % visible.length];
+    fill(next);
+  });
+  dlg.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+      const i = visible.indexOf(current);
+      fill(visible[(i + (e.key === 'ArrowRight' ? 1 : -1) + visible.length) % visible.length]);
+    }
+  });
+
+  readUrl();
+  apply();
+  if (state.colour.size || state.mat.size || state.status.size) { more.hidden = false; moreToggle.setAttribute('aria-expanded', 'true'); }
+  const p = new URLSearchParams(location.search).get('p');
+  if (p && bySlug.has(p)) openQuick(p);
+</script>

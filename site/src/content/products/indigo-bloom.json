@@ -1,0 +1,35 @@
+{
+  "no": 16,
+  "slug": "indigo-bloom",
+  "name": {
+    "th": "กระเป๋าดอกคราม",
+    "en": "The Indigo Bloom"
+  },
+  "category": "bag",
+  "priceFrom": 890,
+  "materials": [
+    "cotton-cord",
+    "indigo-cloth"
+  ],
+  "technique": {
+    "th": "โครเชต์",
+    "en": "Crochet"
+  },
+  "hours": 20,
+  "size": "24 × 16 cm",
+  "colours": [
+    "cream",
+    "indigo"
+  ],
+  "status": "ready",
+  "featured": true,
+  "images": [
+    "./images/indigo-bloom.png"
+  ],
+  "story": {
+    "th": "กระเป๋าทรงกลมนุ่ม ประดับดอกไม้ผ้าครามที่แม่พับเองทีละกลีบ",
+    "en": "A soft rounded bag with an indigo-cloth flower Mom folds petal by petal."
+  },
+  "added": "2026-09-28",
+  "dummy": true
+}

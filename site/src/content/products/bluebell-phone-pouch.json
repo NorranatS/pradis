@@ -1,0 +1,34 @@
+{
+  "no": 20,
+  "slug": "bluebell-phone-pouch",
+  "name": {
+    "th": "ถุงมือถือดอกฟ้า",
+    "en": "Bluebell Phone Pouch"
+  },
+  "category": "accessory",
+  "priceFrom": 390,
+  "materials": [
+    "cotton-yarn"
+  ],
+  "technique": {
+    "th": "โครเชต์",
+    "en": "Crochet"
+  },
+  "hours": 8,
+  "size": "11 × 19 cm",
+  "colours": [
+    "sky",
+    "cream"
+  ],
+  "status": "ready",
+  "featured": false,
+  "images": [
+    "./images/bluebell-phone-pouch.png"
+  ],
+  "story": {
+    "th": "ถุงใส่มือถือลายกรานนี่สแควร์ สายสะพายถักมือ",
+    "en": "A granny-square phone pouch with a hand-crocheted strap."
+  },
+  "added": "2026-08-02",
+  "dummy": true
+}

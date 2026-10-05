@@ -1,0 +1,33 @@
+{
+  "no": 11,
+  "slug": "apricot-rope-tote",
+  "name": {
+    "th": "กระเป๋าเชือกฟอกสีแอปริคอต",
+    "en": "Apricot Rope Tote"
+  },
+  "category": "bag",
+  "priceFrom": 990,
+  "materials": [
+    "rope-yarn"
+  ],
+  "technique": {
+    "th": "โครเชต์",
+    "en": "Crochet"
+  },
+  "hours": 12,
+  "size": "30 × 34 cm",
+  "colours": [
+    "apricot"
+  ],
+  "status": "ready",
+  "featured": true,
+  "images": [
+    "./images/apricot-rope-tote.png"
+  ],
+  "story": {
+    "th": "กระเป๋าทรงถังจากเชือกฟอก แข็งแรง ทรงสวย ติดกระดุมกะลา",
+    "en": "A sturdy bucket tote in rope yarn, closed with a coconut-shell button."
+  },
+  "added": "2026-09-25",
+  "dummy": true
+}

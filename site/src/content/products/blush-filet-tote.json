@@ -1,0 +1,33 @@
+{
+  "no": 10,
+  "slug": "blush-filet-tote",
+  "name": {
+    "th": "ตาข่ายชมพูอ่อน",
+    "en": "Blush Filet Tote"
+  },
+  "category": "bag",
+  "priceFrom": 1190,
+  "materials": [
+    "cotton-cord"
+  ],
+  "technique": {
+    "th": "โครเชต์",
+    "en": "Crochet"
+  },
+  "hours": 18,
+  "size": "40 × 36 cm",
+  "colours": [
+    "blush"
+  ],
+  "status": "made-to-order",
+  "featured": false,
+  "images": [
+    "./images/blush-filet-tote.png"
+  ],
+  "story": {
+    "th": "กระเป๋าสะพายลายตาข่ายฟิเลต์ พร้อมพู่ลูกปัดถักมือ",
+    "en": "A filet-mesh shoulder tote with a hand-crocheted bead tassel."
+  },
+  "added": "2026-08-09",
+  "dummy": true
+}

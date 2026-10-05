@@ -1,0 +1,33 @@
+{
+  "no": 5,
+  "slug": "terracotta-market-tote",
+  "name": {
+    "th": "กระเป๋าตลาดสีดินเผา",
+    "en": "Terracotta Market Tote"
+  },
+  "category": "bag",
+  "priceFrom": 1290,
+  "materials": [
+    "cotton-yarn"
+  ],
+  "technique": {
+    "th": "โครเชต์",
+    "en": "Crochet"
+  },
+  "hours": 16,
+  "size": "38 × 32 cm",
+  "colours": [
+    "terracotta"
+  ],
+  "status": "made-to-order",
+  "featured": false,
+  "images": [
+    "./images/terracotta-market-tote.png"
+  ],
+  "story": {
+    "th": "ใบใหญ่ใส่ของได้เยอะ ลายตาข่ายโปร่ง น้ำหนักเบา ถือไปตลาดหรือไปทำงานก็สวย",
+    "en": "Roomy and light in an open V-stitch, as lovely at the market as at work."
+  },
+  "added": "2026-08-14",
+  "dummy": true
+}

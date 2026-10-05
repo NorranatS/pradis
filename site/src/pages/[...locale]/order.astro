@@ -1,0 +1,94 @@
+---
+import Base from '../../layouts/Base.astro';
+import { links, site } from '../../config/site';
+import { t, href, digits, localePaths, type Lang } from '../../i18n';
+
+export const getStaticPaths = localePaths;
+const { lang } = Astro.props as { lang: Lang };
+const th = lang === 'th';
+const steps = th
+  ? [
+      ['เลือกชิ้นที่ชอบ', 'ดูในหน้าผลงาน จดชื่อหรือหมายเลขชิ้นงานไว้ กดปุ่ม “สั่งทำใบนี้” แล้วเราจะเตรียมข้อความให้'],
+      ['ทักหาแม่', 'ส่งข้อความทาง LINE, Instagram หรือ Facebook บอกสี ขนาด หรือถ้าเป็นของขวัญก็บอกได้เลย'],
+      ['ยืนยันและมัดจำ', 'แม่จะสรุปราคา สี และวันที่ได้รับ เมื่อตกลงแล้วโอนมัดจำ 50% สำหรับงานสั่งทำ'],
+      ['รอรับของขวัญ', 'พร้อมส่งจัดส่งภายใน 2–3 วัน งานสั่งทำประมาณ 1–3 สัปดาห์ แม่จะส่งรูประหว่างทำให้ดูด้วย'],
+    ]
+  : [
+      ['Pick a piece', 'Browse the collection and note the name or number. Tap “Order this one” and we’ll prepare the message.'],
+      ['Message Mom', 'Send it on LINE, Instagram or Facebook. Mention colour, size, or that it’s a gift.'],
+      ['Confirm & deposit', 'Mom confirms price, colour and delivery date. Made-to-order pieces need a 50% deposit.'],
+      ['Receive it', 'Ready pieces ship in 2–3 days; made-to-order takes about 1–3 weeks. Mom sends progress photos.'],
+    ];
+const faq = th
+  ? [
+      ['สั่งสีที่ไม่มีในรูปได้ไหม', 'ได้ค่ะ ส่วนใหญ่สั่งทำได้ทุกสี ราคาที่แสดงเป็นราคาเริ่มต้น'],
+      ['จัดส่งยังไง', 'ส่งทั่วประเทศทางไปรษณีย์หรือขนส่งเอกชน ค่าส่งแจ้งตอนสรุปออเดอร์'],
+      ['ดูแลรักษายังไง', 'ซักมือเบา ๆ ด้วยน้ำเย็น ไม่บิด ผึ่งในที่ร่ม ผ้าครามอาจตกสีเล็กน้อยในการซักครั้งแรก'],
+      ['ส่งเป็นของขวัญได้ไหม', 'ได้ค่ะ แม่ห่อของขวัญและเขียนการ์ดให้ฟรี'],
+    ]
+  : [
+      ['Can I order a colour that isn’t shown?', 'Yes. Most pieces can be made in any colour; prices shown are starting prices.'],
+      ['How do you ship?', 'Nationwide by post or courier. Shipping is confirmed with your order.'],
+      ['How do I care for it?', 'Hand-wash gently in cold water, don’t wring, dry in the shade. Indigo may release a little colour on the first wash.'],
+      ['Can it be sent as a gift?', 'Of course. Mom gift-wraps and writes a card for free.'],
+    ];
+---
+<Base lang={lang} title={t(lang, 'nav.order')}>
+  <section class="page-head">
+    <span class="deco scrap kraftpaper" style="width:200px;height:140px;right:8%;top:130px;rotate:-6deg" data-depth="-0.06"></span>
+    <div class="wrap">
+      <div class="label-card sheet top reveal">
+        <p class="sc">{site.name[lang]}</p>
+        <h1>{th ? <>วิธี<em>สั่งทำ</em></> : <>How to <em>order</em></>}</h1>
+        <p>{th ? 'ไม่ต้องสมัคร ไม่ต้องจ่ายผ่านเว็บ แค่ทักหาแม่' : 'No account, no checkout. Just message Mom.'}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap steps-sec">
+    <ol class="steps">
+      {steps.map((s, i) => <li class={`step sheet top reveal d${i % 3}`}><span class="n">{digits(lang, i + 1)}</span><div><h2>{s[0]}</h2><p>{s[1]}</p></div></li>)}
+    </ol>
+  </section>
+
+  <section class="wrap channels-sec">
+    <div class="ch-card sheet top reveal">
+      <h2>{th ? 'ทักหาแม่ได้ทางนี้' : 'Message Mom here'}</h2>
+      <div class="channels">
+        <a class="channel line" href={links.line} target="_blank" rel="noopener"><span class="ico">LINE</span><span><b>LINE</b><small>ID: {site.contact.lineId}</small></span></a>
+        <a class="channel ig" href={links.instagram} target="_blank" rel="noopener"><span class="ico">IG</span><span><b>Instagram</b><small>@{site.contact.instagram}</small></span></a>
+        <a class="channel fb" href={links.messenger} target="_blank" rel="noopener"><span class="ico">FB</span><span><b>Messenger</b><small>Facebook</small></span></a>
+      </div>
+      <p class="also">{th ? 'หรือโทร' : 'Or call'} <a href={site.contact.phoneHref}>{site.contact.phone}</a> · <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a></p>
+    </div>
+    <div class="faq reveal d1">
+      <h2>{th ? 'คำถามที่พบบ่อย' : 'Questions'}</h2>
+      {faq.map((f) => <details class="sheet"><summary>{f[0]}</summary><p>{f[1]}</p></details>)}
+      <a class="btn ink" href={href(lang, '/collection')}>{t(lang, 'cta.seeAll')} →</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .steps-sec { padding: 20px 0 80px; }
+  .steps { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 26px; }
+  .step { display: flex; gap: 22px; padding: 30px; }
+  .step:nth-child(odd) { rotate: -.6deg; }
+  .step:nth-child(even) { rotate: .6deg; margin-top: 30px; }
+  .n { font: 500 64px/1 var(--serif-th); color: var(--ochre); }
+  .step h2 { font-size: 30px; }
+  :global(:lang(th)) .step h2 { font-size: 22px; }
+  .step p { margin: 6px 0 0; color: var(--muted); }
+  .channels-sec { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; padding-bottom: 130px; }
+  .ch-card { padding: 40px; rotate: -.5deg; }
+  .ch-card h2, .faq h2 { font-size: 40px; margin-bottom: 20px; }
+  :global(:lang(th)) .ch-card h2, :global(:lang(th)) .faq h2 { font-size: 30px; }
+  .also { color: var(--muted); font-size: 15px; margin: 18px 0 0; }
+  details { padding: 0 22px; margin-bottom: 10px; }
+  summary { cursor: pointer; padding: 18px 0; font-weight: 500; list-style: none; display: flex; justify-content: space-between; gap: 10px; }
+  summary::after { content: "+"; color: var(--ochre); font-size: 22px; line-height: 1; }
+  details[open] summary::after { content: "–"; }
+  details p { margin: 0 0 18px; color: var(--muted); }
+  .faq .btn { margin-top: 18px; }
+  @media (max-width: 860px) { .steps, .channels-sec { grid-template-columns: 1fr; } .step:nth-child(even) { margin-top: 0; } }
+</style>

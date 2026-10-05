@@ -1,0 +1,33 @@
+{
+  "no": 26,
+  "slug": "daisy-charm",
+  "name": {
+    "th": "พวงกุญแจดอกเดซี่",
+    "en": "Daisy Charm"
+  },
+  "category": "accessory",
+  "priceFrom": 190,
+  "materials": [
+    "cotton-yarn"
+  ],
+  "technique": {
+    "th": "โครเชต์",
+    "en": "Crochet"
+  },
+  "hours": 2,
+  "size": "6 cm",
+  "colours": [
+    "cream"
+  ],
+  "status": "ready",
+  "featured": false,
+  "images": [
+    "./images/daisy-charm.png"
+  ],
+  "story": {
+    "th": "พวงกุญแจดอกไม้ถักมือ ห้อยกระเป๋าหรือกุญแจก็น่ารัก",
+    "en": "A hand-crocheted flower charm for keys or a bag."
+  },
+  "added": "2026-06-25",
+  "dummy": true
+}

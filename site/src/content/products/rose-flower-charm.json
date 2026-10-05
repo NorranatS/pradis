@@ -1,0 +1,33 @@
+{
+  "no": 28,
+  "slug": "rose-flower-charm",
+  "name": {
+    "th": "พวงกุญแจดอกกุหลาบ",
+    "en": "Rose Flower Charm"
+  },
+  "category": "accessory",
+  "priceFrom": 190,
+  "materials": [
+    "cotton-yarn"
+  ],
+  "technique": {
+    "th": "โครเชต์",
+    "en": "Crochet"
+  },
+  "hours": 2,
+  "size": "6 cm",
+  "colours": [
+    "rose"
+  ],
+  "status": "ready",
+  "featured": false,
+  "images": [
+    "./images/rose-flower-charm.png"
+  ],
+  "story": {
+    "th": "พวงกุญแจดอกไม้ถักมือ ห้อยกระเป๋าหรือกุญแจก็น่ารัก",
+    "en": "A hand-crocheted flower charm for keys or a bag."
+  },
+  "added": "2026-06-27",
+  "dummy": true
+}

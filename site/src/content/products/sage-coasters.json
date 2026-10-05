@@ -1,0 +1,33 @@
+{
+  "no": 22,
+  "slug": "sage-coasters",
+  "name": {
+    "th": "ที่รองแก้วสีเซจ",
+    "en": "Sage Coasters"
+  },
+  "category": "accessory",
+  "priceFrom": 450,
+  "materials": [
+    "cotton-yarn"
+  ],
+  "technique": {
+    "th": "โครเชต์",
+    "en": "Crochet"
+  },
+  "hours": 5,
+  "size": "Ø 10 cm × 4",
+  "colours": [
+    "sage"
+  ],
+  "status": "ready",
+  "featured": false,
+  "images": [
+    "./images/sage-coasters.png"
+  ],
+  "story": {
+    "th": "ที่รองแก้วถักวงกลม ชุดละ 4 ชิ้น ซับน้ำดี",
+    "en": "Round crochet coasters, set of four, soft and absorbent."
+  },
+  "added": "2026-06-21",
+  "dummy": true
+}

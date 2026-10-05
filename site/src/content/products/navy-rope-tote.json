@@ -1,0 +1,33 @@
+{
+  "no": 14,
+  "slug": "navy-rope-tote",
+  "name": {
+    "th": "กระเป๋าเชือกฟอกสีกรมท่า",
+    "en": "Navy Rope Tote"
+  },
+  "category": "bag",
+  "priceFrom": 990,
+  "materials": [
+    "rope-yarn"
+  ],
+  "technique": {
+    "th": "โครเชต์",
+    "en": "Crochet"
+  },
+  "hours": 12,
+  "size": "30 × 34 cm",
+  "colours": [
+    "navy"
+  ],
+  "status": "made-to-order",
+  "featured": false,
+  "images": [
+    "./images/navy-rope-tote.png"
+  ],
+  "story": {
+    "th": "กระเป๋าทรงถังจากเชือกฟอก แข็งแรง ทรงสวย ติดกระดุมกะลา",
+    "en": "A sturdy bucket tote in rope yarn, closed with a coconut-shell button."
+  },
+  "added": "2026-07-13",
+  "dummy": true
+}

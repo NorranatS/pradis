@@ -1,0 +1,34 @@
+{
+  "no": 32,
+  "slug": "night-weave-tee",
+  "name": {
+    "th": "เสื้อครามแถบผ้าทอ",
+    "en": "Night Weave Tee"
+  },
+  "category": "tee",
+  "priceFrom": 690,
+  "materials": [
+    "thai-silk",
+    "cotton"
+  ],
+  "technique": {
+    "th": "ปักมือ + ผ้าทอ",
+    "en": "Hand embroidery + woven cloth"
+  },
+  "hours": 6,
+  "size": "S–XL",
+  "colours": [
+    "navy"
+  ],
+  "status": "coming-soon",
+  "featured": false,
+  "images": [
+    "./images/night-weave-tee.png"
+  ],
+  "story": {
+    "th": "เสื้อยืดปักลายประเพณีไทย พร้อมแถบผ้าทอพื้นเมือง กำลังพัฒนา",
+    "en": "A tee with Thai festival embroidery and a strip of local hand-woven cloth. In development."
+  },
+  "added": "2026-10-01",
+  "dummy": true
+}

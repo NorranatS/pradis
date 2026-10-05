@@ -1,0 +1,32 @@
+---
+import { site } from '../config/site';
+import { t, href, switchHref, type Lang } from '../i18n';
+
+interface Props { lang: Lang; onDark?: boolean }
+const { lang, onDark = false } = Astro.props;
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const items = [
+  { key: 'nav.collection', to: '/collection' },
+  { key: 'nav.story', to: '/story' },
+  { key: 'nav.order', to: '/order' },
+] as const;
+const isCurrent = (to: string) => {
+  const target = href(lang, to).replace(/\/$/, '');
+  return path === target || path.startsWith(target + '/');
+};
+---
+<header class:list={['site-header', { 'on-dark': onDark }]} id="site-header">
+  <div class="wrap bar">
+    <a class="mark" href={href(lang, '/')}>{site.name.th} <small>{site.wordmark}</small></a>
+    <nav class="nav" aria-label="Main">
+      {items.map((i) => (
+        <a class="link" href={href(lang, i.to)} aria-current={isCurrent(i.to) ? 'page' : undefined}>{t(lang, i.key)}</a>
+      ))}
+      <button class="btn solid small" data-order>{t(lang, 'cta.contact')}</button>
+      <div class="lang" role="group" aria-label="Language">
+        <a href={switchHref(Astro.url.pathname, 'th')} aria-current={lang === 'th' ? 'true' : undefined} hreflang="th" lang="th">ไทย</a>
+        <a href={switchHref(Astro.url.pathname, 'en')} aria-current={lang === 'en' ? 'true' : undefined} hreflang="en" lang="en">EN</a>
+      </div>
+    </nav>
+  </div>
+</header>

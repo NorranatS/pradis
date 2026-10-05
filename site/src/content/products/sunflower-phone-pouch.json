@@ -1,0 +1,34 @@
+{
+  "no": 19,
+  "slug": "sunflower-phone-pouch",
+  "name": {
+    "th": "ถุงมือถือทานตะวัน",
+    "en": "Sunflower Phone Pouch"
+  },
+  "category": "accessory",
+  "priceFrom": 390,
+  "materials": [
+    "cotton-yarn"
+  ],
+  "technique": {
+    "th": "โครเชต์",
+    "en": "Crochet"
+  },
+  "hours": 8,
+  "size": "11 × 19 cm",
+  "colours": [
+    "sunflower",
+    "cream"
+  ],
+  "status": "ready",
+  "featured": true,
+  "images": [
+    "./images/sunflower-phone-pouch.png"
+  ],
+  "story": {
+    "th": "ถุงใส่มือถือลายกรานนี่สแควร์ สายสะพายถักมือ",
+    "en": "A granny-square phone pouch with a hand-crocheted strap."
+  },
+  "added": "2026-09-22",
+  "dummy": true
+}

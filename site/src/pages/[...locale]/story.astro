@@ -1,0 +1,161 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Thread from '../../components/Thread.astro';
+import maker from '../../assets/maker.jpg';
+import { t, href, digits, localePaths, type Lang } from '../../i18n';
+
+export const getStaticPaths = localePaths;
+const { lang } = Astro.props as { lang: Lang };
+const th = lang === 'th';
+const swatches = [
+  { cls: 'c-kram', th: ['ผ้าคราม', 'ย้อมจากต้นคราม ย้อมซ้ำหลายรอบจนได้สีน้ำเงินลึก สีจะลึกขึ้นทุกครั้งที่ซัก'], en: ['Indigo cloth', 'Dyed from the indigo plant, dipped again and again. The blue deepens with every wash.'] },
+  { cls: 'c-silk', th: ['ผ้าไหมไทย', 'ทอมือ เงางามแบบธรรมชาติ ใช้ทำดอกไม้ ขอบกระเป๋า และงานปัก'], en: ['Thai silk', 'Hand-woven with a natural sheen, used for flowers, trims and embroidery.'] },
+  { cls: 'c-cotton', th: ['เชือกและด้ายฝ้าย', 'นุ่มมือ แข็งแรง ระบายอากาศดี ใช้ได้ทุกวัน ไม่มีเอาต์'], en: ['Cotton cord & yarn', 'Soft in the hand, strong and breathable, made for every day.'] },
+];
+const steps = th
+  ? [['เลือกด้าย', 'ฝ้าย คราม หรือไหม ตามเรื่องที่อยากเล่า'], ['ถักทีละห่วง', 'หลายพันห่วงต่อหนึ่งใบ ใช้เวลาหลายวัน'], ['ตกแต่ง', 'ดอกไม้ พู่ และกระดุม เย็บด้วยมือ'], ['ส่งมอบ', 'ห่ออย่างตั้งใจ พร้อมการ์ดเขียนมือ']]
+  : [['Choosing', 'Cotton, indigo or silk, depending on the story'], ['Stitching', 'Thousands of loops, over several days'], ['Finishing', 'Flowers, tassels and buttons, sewn by hand'], ['Giving', 'Wrapped with care and a handwritten card']];
+---
+<Base lang={lang} title={t(lang, 'nav.story')}>
+  <section class="page-head">
+    <span class="deco scrap bookcloth pinked" style="width:240px;height:160px;right:5%;top:120px;rotate:7deg" data-depth="-0.08"></span>
+    <div class="wrap">
+      <div class="label-card sheet top reveal">
+        <p class="sc">{th ? 'ผู้ประดิษฐ์' : 'The maker'}</p>
+        <h1>{th ? <>เรื่อง<em>ของแม่</em></> : <>Mom’s <em>story</em></>}</h1>
+        <p>{th ? 'ข้อความตัวอย่าง: แทนที่ด้วยเรื่องจริงของแม่ได้ที่ไฟล์นี้' : 'Placeholder copy: replace with Mom’s real story.'}</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="stitched">
+    <Thread />
+    <section class="maker">
+      <div class="wrap maker-grid">
+        <div class="photo-wrap" data-thread="92" data-ty="0.1">
+          <div class="under cloth bookcloth"></div>
+          <figure class="print sheet top reveal" data-tilt="4">
+            <Image src={maker} alt={th ? 'แม่กับกระเป๋าที่ถักเอง' : 'Mom with one of her bags'} width={900} />
+            <figcaption class="hand">{th ? 'แม่ (ซ้าย) กับใบโปรด' : 'Mom (left) with a favourite'}</figcaption>
+          </figure>
+        </div>
+        <div class="story-card sheet top reveal d1">
+          <blockquote>{th ? <>“ของที่ทำด้วยมือ จะมี<em>หัวใจของคนทำ</em>ติดไปด้วยเสมอ”</> : <>“Something made by hand always carries <em>a little of the maker’s heart.</em>”</>}</blockquote>
+          <p>{th ? 'ข้อความตัวอย่าง: แม่เริ่มถักโครเชต์ตอนว่างจากงาน ตอนแรกทำเป็นของขวัญให้คนในบ้าน แล้วเพื่อน ๆ ก็เริ่มขอให้ทำให้บ้าง จนกลายเป็นงานที่ทำทุกวัน' : 'Placeholder: Mom began crocheting in her spare time, first as gifts for family. Then friends started asking for their own, and it became something she does every day.'}</p>
+          <p>{th ? 'ทุกห่วงคือเวลาเงียบ ๆ ที่แม่ได้อยู่กับตัวเอง และคิดถึงคนที่จะได้ใช้ แม่เลือกใช้ผ้าครามและไหมไทย เพราะอยากให้ผ้าพื้นบ้านได้ออกไปเดินทางกับคนรุ่นใหม่' : 'Every loop is quiet time spent thinking of the person who will carry it. She works with indigo and Thai silk so local cloth can travel with a new generation.'}</p>
+          <p class="sig hand">— {th ? 'แม่' : 'Mom'}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="materials">
+      <div class="under board linen"></div>
+      <div class="wrap" data-thread="8" data-ty="0.2">
+        <div class="label-card sheet top reveal">
+          <p class="sc">{th ? 'สมุดตัวอย่างผ้า' : 'The swatch book'}</p>
+          <h2>{th ? <>วัสดุจาก<em>บ้านเรา</em></> : <>Materials <em>from home</em></>}</h2>
+        </div>
+        <div class="sw-row">
+          {swatches.map((s, i) => (
+            <div class={`swatch top reveal d${i}`}>
+              <i class="pin"></i>
+              <div class={`cloth pinked ${s.cls}`}></div>
+              <div class="lbl sheet"><small>No. {digits(lang, i + 1, 2)}</small><b>{s[lang][0]}</b><span>{s[lang][1]}</span></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="process">
+      <div class="wrap">
+        <div class="under strip kraftpaper"></div>
+        <div class="label-card sheet top reveal">
+          <p class="sc">{th ? 'กระบวนการ' : 'Process'}</p>
+          <h2>{th ? <>จากเส้นด้าย <em>สู่ของขวัญ</em></> : <>From thread <em>to gift</em></>}</h2>
+        </div>
+        <div class="steps" data-thread="60" data-ty="0.5">
+          {steps.map((s, i) => <div class={`step sheet top reveal d${i}`}><div class="n">{digits(lang, i + 1)}</div><h3>{s[0]}</h3><p>{s[1]}</p></div>)}
+        </div>
+      </div>
+    </section>
+
+    <section class="closing">
+      <div class="wrap" data-thread="50" data-ty="0.4">
+        <div class="panel bookcloth top reveal">
+          <h2>{th ? 'อยากได้สักใบไหมคะ' : 'Would you like one of your own?'}</h2>
+          <div class="ctas">
+            <a class="btn solid" href={href(lang, '/collection')}>{t(lang, 'cta.seeAll')}</a>
+            <button class="btn ghost" data-order>{t(lang, 'cta.contact')}</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .maker { padding: 40px 0 140px; }
+  .maker-grid { display: grid; grid-template-columns: repeat(12, 1fr); align-items: center; }
+  .photo-wrap { grid-column: 1 / span 6; grid-row: 1; position: relative; }
+  .photo-wrap .cloth { inset: -40px 40px 60px -40px; rotate: -3deg; box-shadow: 0 30px 60px -30px rgba(5,10,25,.6); }
+  .print { margin: 0; padding: 16px 16px 50px; rotate: 1.6deg; }
+  .print :global(img) { width: 100%; aspect-ratio: 4/5; object-fit: cover; object-position: 22% 35%; }
+  .print figcaption { position: absolute; left: 16px; right: 16px; bottom: 12px; font-size: 20px; }
+  .story-card { grid-column: 6 / span 7; grid-row: 1; padding: clamp(40px, 5vw, 70px); margin-left: -10px; rotate: -.8deg; }
+  .story-card blockquote { margin: 0 0 22px; font: 500 clamp(32px, 3.6vw, 52px)/1.25 var(--display); }
+  :global(:lang(th)) .story-card blockquote { font: 400 clamp(26px, 2.8vw, 40px)/1.7 var(--serif-th); }
+  .story-card blockquote :global(em) { color: var(--terra); }
+  .story-card p { color: var(--muted); max-width: 52ch; }
+  .sig { font-size: 30px; margin: 10px 0 0; color: var(--kram) !important; }
+
+  .materials { position: relative; padding: 60px 0 150px; }
+  .board { left: -4%; right: 2%; top: 0; bottom: 40px; rotate: .8deg; box-shadow: var(--shadow); }
+  .materials .wrap { padding-top: 60px; }
+  .sw-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(26px, 4vw, 56px); margin-top: 50px; }
+  .swatch { position: relative; }
+  .swatch:nth-child(1) { rotate: -2deg; }
+  .swatch:nth-child(2) { rotate: 1.5deg; margin-top: 40px; }
+  .swatch:nth-child(3) { rotate: -1deg; }
+  .cloth { aspect-ratio: 4/3; filter: drop-shadow(0 20px 18px rgba(36,30,26,.35)); }
+  .pin { position: absolute; z-index: 5; top: -8px; left: 50%; width: 16px; height: 16px; margin-left: -8px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #F3E2B8, var(--ochre) 60%, #7A5A22); box-shadow: 0 3px 4px rgba(0,0,0,.4); }
+  .lbl { display: block; width: 84%; margin: -26px auto 0; padding: 16px 20px; position: relative; }
+  .lbl small { display: block; font-size: 12px; color: var(--ochre); font-weight: 500; letter-spacing: .1em; }
+  .lbl b { display: block; font: 500 26px/1.2 var(--display); margin: 2px 0 4px; }
+  :global(:lang(th)) .lbl b { font: 400 21px/1.4 var(--serif-th); }
+  .lbl > span { font-size: 14px; color: var(--muted); }
+  .c-kram { background: repeating-linear-gradient(90deg, rgba(255,255,255,.08) 0 1px, transparent 1px 4px), repeating-linear-gradient(0deg, rgba(0,0,0,.18) 0 1px, transparent 1px 3px), radial-gradient(circle at 30% 30%, #5370B5, #1C2C55 70%); }
+  .c-silk { background: repeating-linear-gradient(90deg, rgba(120,80,20,.08) 0 1px, transparent 1px 2px), linear-gradient(115deg, #D9B97A 0%, #F1DDB0 30%, #C99F5A 52%, #EBD3A0 72%, #BF934E 100%); }
+  .c-cotton { background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.6) 0 2px, transparent 3px) 0 0 / 8px 8px, radial-gradient(circle at 50% 50%, rgba(110,96,74,.25) 0 2.4px, transparent 3px) 4px 4px / 8px 8px, #EDE3D1; }
+
+  .process { padding: 20px 0 140px; }
+  .strip { left: 0; right: 0; top: 55%; height: 120px; rotate: -1.4deg; }
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px; margin-top: 40px; }
+  .step { padding: 30px 26px 34px; }
+  .step:nth-child(1) { rotate: -1.5deg; }
+  .step:nth-child(2) { rotate: 1deg; margin-top: 70px; }
+  .step:nth-child(3) { rotate: -.8deg; margin-top: 20px; }
+  .step:nth-child(4) { rotate: 1.6deg; margin-top: 90px; }
+  .step .n { font: 500 64px/1 var(--serif-th); color: var(--ochre); }
+  .step h3 { font-size: 30px; margin: 14px 0 6px; }
+  :global(:lang(th)) .step h3 { font-size: 22px; }
+  .step p { margin: 0; color: var(--muted); font-size: 15px; }
+
+  .closing { padding: 0 0 130px; }
+  .panel { color: #EDE7DA; text-align: center; padding: clamp(60px, 8vw, 110px) 30px; rotate: -.8deg; box-shadow: 0 40px 70px -40px rgba(5,10,25,.8); }
+  .panel h2 { font-size: clamp(40px, 5vw, 76px); margin-bottom: 30px; }
+  :global(:lang(th)) .panel h2 { font-size: clamp(32px, 3.8vw, 56px); }
+  .ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .panel .btn.ghost { color: #EDE7DA; }
+
+  @media (max-width: 900px) {
+    .photo-wrap, .story-card { grid-column: 1 / -1; grid-row: auto; }
+    .story-card { margin: -30px 8px 0; }
+    .photo-wrap .cloth { inset: -20px 20px 40px -10px; }
+    .sw-row { grid-template-columns: 1fr; max-width: 380px; margin-inline: auto; }
+    .swatch { margin-top: 20px !important; }
+    .steps { grid-template-columns: 1fr 1fr; }
+    .step { margin-top: 0 !important; }
+  }
+</style>

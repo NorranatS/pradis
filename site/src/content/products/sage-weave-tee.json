@@ -1,0 +1,34 @@
+{
+  "no": 31,
+  "slug": "sage-weave-tee",
+  "name": {
+    "th": "เสื้อแถบผ้าทอเซจ",
+    "en": "Sage Weave Tee"
+  },
+  "category": "tee",
+  "priceFrom": 690,
+  "materials": [
+    "thai-silk",
+    "cotton"
+  ],
+  "technique": {
+    "th": "ปักมือ + ผ้าทอ",
+    "en": "Hand embroidery + woven cloth"
+  },
+  "hours": 6,
+  "size": "S–XL",
+  "colours": [
+    "sage"
+  ],
+  "status": "coming-soon",
+  "featured": false,
+  "images": [
+    "./images/sage-weave-tee.png"
+  ],
+  "story": {
+    "th": "เสื้อยืดปักลายประเพณีไทย พร้อมแถบผ้าทอพื้นเมือง กำลังพัฒนา",
+    "en": "A tee with Thai festival embroidery and a strip of local hand-woven cloth. In development."
+  },
+  "added": "2026-10-01",
+  "dummy": true
+}

@@ -1,0 +1,33 @@
+{
+  "no": 15,
+  "slug": "cream-rope-tote",
+  "name": {
+    "th": "กระเป๋าเชือกฟอกสีครีม",
+    "en": "Cream Rope Tote"
+  },
+  "category": "bag",
+  "priceFrom": 990,
+  "materials": [
+    "rope-yarn"
+  ],
+  "technique": {
+    "th": "โครเชต์",
+    "en": "Crochet"
+  },
+  "hours": 12,
+  "size": "30 × 34 cm",
+  "colours": [
+    "cream"
+  ],
+  "status": "ready",
+  "featured": false,
+  "images": [
+    "./images/cream-rope-tote.png"
+  ],
+  "story": {
+    "th": "กระเป๋าทรงถังจากเชือกฟอก แข็งแรง ทรงสวย ติดกระดุมกะลา",
+    "en": "A sturdy bucket tote in rope yarn, closed with a coconut-shell button."
+  },
+  "added": "2026-07-14",
+  "dummy": true
+}

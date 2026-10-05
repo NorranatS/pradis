@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+import { href } from '../i18n';
+---
+<Base lang="th" title="ไม่พบหน้านี้">
+  <section class="page-head">
+    <div class="wrap">
+      <div class="label-card sheet top">
+        <p class="sc">404</p>
+        <h1>ไม่พบ<em>หน้านี้</em></h1>
+        <p>หน้านี้อาจถูกย้ายไปแล้ว ลองกลับไปดูผลงานทั้งหมดนะคะ · This page may have moved.</p>
+        <p style="margin-top:22px"><a class="btn ink" href={href('th', '/collection')}>ดูผลงานทั้งหมด →</a> <a class="btn ghost" href={href('en', '/collection')}>See the collection</a></p>
+      </div>
+    </div>
+  </section>
+  <div style="height:200px"></div>
+</Base>

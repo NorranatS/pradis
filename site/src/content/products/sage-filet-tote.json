@@ -1,0 +1,33 @@
+{
+  "no": 9,
+  "slug": "sage-filet-tote",
+  "name": {
+    "th": "ตาข่ายเซจ",
+    "en": "Sage Filet Tote"
+  },
+  "category": "bag",
+  "priceFrom": 1190,
+  "materials": [
+    "cotton-cord"
+  ],
+  "technique": {
+    "th": "โครเชต์",
+    "en": "Crochet"
+  },
+  "hours": 18,
+  "size": "40 × 36 cm",
+  "colours": [
+    "sage"
+  ],
+  "status": "ready",
+  "featured": false,
+  "images": [
+    "./images/sage-filet-tote.png"
+  ],
+  "story": {
+    "th": "กระเป๋าสะพายลายตาข่ายฟิเลต์ พร้อมพู่ลูกปัดถักมือ",
+    "en": "A filet-mesh shoulder tote with a hand-crocheted bead tassel."
+  },
+  "added": "2026-08-08",
+  "dummy": true
+}

@@ -1,0 +1,39 @@
+---
+import { site, links } from '../config/site';
+import { t, href, digits, categories, type Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const year = lang === 'th' ? digits('th', site.year + 543) : site.year;
+---
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <div class="brand">{site.name[lang]}</div>
+        <p style="max-width:40ch;margin:8px 0 0">{site.tagline[lang]}</p>
+      </div>
+      <div>
+        <ul>
+          <li><a href={href(lang, '/collection')}>{t(lang, 'nav.collection')}</a></li>
+          {(['bag', 'accessory', 'tee'] as const).map((c) => <li><a href={href(lang, `/collection?cat=${c}`)}>{categories[c][lang]}</a></li>)}
+          <li><a href={href(lang, '/story')}>{t(lang, 'nav.story')}</a></li>
+          <li><a href={href(lang, '/order')}>{t(lang, 'nav.order')}</a></li>
+        </ul>
+      </div>
+      <div>
+        <ul>
+          <li><a href={links.line} target="_blank" rel="noopener">LINE · {site.contact.lineId}</a></li>
+          <li><a href={links.instagramProfile} target="_blank" rel="noopener">Instagram · @{site.contact.instagram}</a></li>
+          <li><a href={links.facebook} target="_blank" rel="noopener">Facebook</a></li>
+          <li><a href={site.contact.phoneHref}>{site.contact.phone}</a></li>
+          <li><a href={`mailto:${site.contact.email}`}>{site.contact.email}</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="fine">
+      <span>© {year} {site.name[lang]} · {t(lang, 'footer.made')}</span>
+      <span>{t(lang, 'footer.dummy')}</span>
+    </div>
+  </div>
+</footer>
