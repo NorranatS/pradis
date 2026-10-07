@@ -13,6 +13,8 @@ const count = (l?: string) => (l ? all.filter((p) => p.data.line === l).length :
 const usedTypes = (Object.keys(types) as (keyof typeof types)[]).filter((ty) => all.some((p) => p.data.type === ty));
 const usedColours = [...new Set(all.flatMap((p) => p.data.colours))];
 const usedMaterials = [...new Set(all.flatMap((p) => p.data.materials))];
+// Which lines use each filter value, so the chips can follow the selected line
+const linesOf = (has: (p: (typeof all)[number]['data']) => boolean) => [...new Set(all.filter((e) => has(e.data)).map((e) => e.data.line))].join(' ');
 
 const catalog = await Promise.all(all.map(async (e, i) => {
   const p = e.data;
@@ -84,13 +86,13 @@ const labels = {
         <div class="more-panel" id="more" hidden>
           <fieldset>
             <legend>{t(lang, 'filter.type')}</legend>
-            <div class="chips">{usedTypes.map((ty) => <button class="chip" data-type={ty} aria-pressed="false">{types[ty][lang]}</button>)}</div>
+            <div class="chips">{usedTypes.map((ty) => <button class="chip" data-type={ty} data-lines={linesOf((d) => d.type === ty)} aria-pressed="false">{types[ty][lang]}</button>)}</div>
           </fieldset>
           <fieldset>
             <legend>{t(lang, 'filter.colour')}</legend>
             <div class="swatches">
               {usedColours.map((c) => (
-                <button class="swatch-btn" data-colour={c} aria-pressed="false" title={colours[c]?.[lang]}>
+                <button class="swatch-btn" data-colour={c} data-lines={linesOf((d) => d.colours.includes(c))} aria-pressed="false" title={colours[c]?.[lang]}>
                   <i style={`background:${colours[c]?.hex}`}></i><span>{colours[c]?.[lang]}</span>
                 </button>
               ))}
@@ -98,7 +100,7 @@ const labels = {
           </fieldset>
           <fieldset>
             <legend>{t(lang, 'filter.material')}</legend>
-            <div class="chips">{usedMaterials.map((m) => <button class="chip" data-mat={m} aria-pressed="false">{materials[m]?.[lang]}</button>)}</div>
+            <div class="chips">{usedMaterials.map((m) => <button class="chip" data-mat={m} data-lines={linesOf((d) => d.materials.includes(m))} aria-pressed="false">{materials[m]?.[lang]}</button>)}</div>
           </fieldset>
           <fieldset>
             <legend>{t(lang, 'filter.status')}</legend>
@@ -204,6 +206,7 @@ const labels = {
   fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
   legend { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
   .swatches, .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  [data-lines][hidden] { display: none; }
   .swatch-btn { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 4px; border-radius: 3px; border: 1px solid var(--faint); background: var(--paper-hi); cursor: pointer; font-size: 13px; }
   .swatch-btn i { width: 22px; height: 22px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0,0,0,.12); }
   .swatch-btn[aria-pressed="true"] { border-color: var(--ink); box-shadow: 0 0 0 1px var(--ink); }
@@ -296,7 +299,16 @@ const labels = {
     history.replaceState(null, '', location.pathname + (s ? '?' + s : ''));
   }
 
+  // A chip belongs to the selected line when some product in that line uses it
+  const inLine = (b: HTMLElement) => !state.cat || (b.dataset.lines || '').split(' ').includes(state.cat);
+  function dropOtherLine() {
+    for (const [attr, key] of [['type', 'type'], ['colour', 'colour'], ['mat', 'mat']] as const) {
+      document.querySelectorAll<HTMLElement>(`[data-${attr}]`).forEach((b) => { if (!inLine(b)) state[key].delete(b.dataset[attr]!); });
+    }
+  }
+
   function syncControls() {
+    document.querySelectorAll<HTMLElement>('[data-lines]').forEach((b) => { b.hidden = !inLine(b); });
     q.value = state.q; sort.value = state.sort;
     suggest.hidden = !!state.q;
     document.querySelectorAll<HTMLElement>('[data-cat]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.cat === state.cat)));
@@ -343,7 +355,7 @@ const labels = {
   document.addEventListener('click', (e) => {
     const t = e.target as HTMLElement;
     const cat = t.closest<HTMLElement>('[data-cat]');
-    if (cat) { state.cat = cat.dataset.cat || ''; apply(); return; }
+    if (cat) { state.cat = cat.dataset.cat || ''; dropOtherLine(); apply(); return; }
     for (const [attr, key] of [['type', 'type'], ['colour', 'colour'], ['mat', 'mat'], ['status', 'status']] as const) {
       const b = t.closest<HTMLElement>(`[data-${attr}]`);
       if (b) { const v = b.dataset[attr]!; state[key].has(v) ? state[key].delete(v) : state[key].add(v); apply(); return; }
@@ -405,6 +417,7 @@ const labels = {
   });
 
   readUrl();
+  dropOtherLine();
   apply();
   if (state.type.size || state.colour.size || state.mat.size || state.status.size) { more.hidden = false; moreToggle.setAttribute('aria-expanded', 'true'); }
   const p = new URLSearchParams(location.search).get('p');

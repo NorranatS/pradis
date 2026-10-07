@@ -283,7 +283,7 @@ const fLabel = `${f.name[lang]} (${t(lang, 'label.no')} ${digits(lang, f.no, 2)}
   .lines-head h2 { font-size: clamp(42px, 5vw, 72px); margin-top: 8px; }
   :global(:lang(th)) .lines-head h2 { font-size: clamp(32px, 3.8vw, 54px); }
   .lines-head h2 em { color: var(--ochre); }
-  .lines-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: stretch; }
+  .lines-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 44px; align-items: stretch; }
   .line-card { position: relative; }
   .line-card .back { inset: 16px -12px -14px 16px; rotate: 1.2deg; box-shadow: var(--shadow); }
   .line-card.craft .back { inset: 16px 16px -14px -12px; rotate: -1.2deg; }
@@ -298,8 +298,8 @@ const fLabel = `${f.name[lang]} (${t(lang, 'label.no')} ${digits(lang, f.no, 2)}
   .line-card.craft .motto { color: #E2C47E; }
   .about { color: var(--muted); margin: 0 0 18px; font-size: 15px; }
   .line-card.craft .about { color: #C3CBE0; }
-  .pics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 0 0 18px; }
-  .pics .pic { aspect-ratio: 1; display: grid; place-items: center; padding: 10%; background: var(--sage-pale); box-shadow: inset 0 0 0 1px rgba(0,0,0,.04); }
+  .pics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 0 0 18px; }
+  .pics .pic { aspect-ratio: 1; min-width: 0; overflow: hidden; display: grid; grid-template: minmax(0, 1fr) / minmax(0, 1fr); place-items: center; padding: 10%; background: var(--sage-pale); box-shadow: inset 0 0 0 1px rgba(0,0,0,.04); }
   .pics .pic:nth-child(2) { background: var(--apricot-pale); }
   .pics .pic:nth-child(3) { background: var(--butter); }
   .line-card.craft .pics .pic { background: rgba(255,255,255,.08); box-shadow: inset 0 0 0 1px rgba(226,196,126,.25); }
