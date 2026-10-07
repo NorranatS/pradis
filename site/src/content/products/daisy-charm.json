@@ -5,10 +5,11 @@
     "th": "พวงกุญแจดอกเดซี่",
     "en": "Daisy Charm"
   },
-  "category": "accessory",
+  "line": "knit",
+  "type": "other",
   "priceFrom": 190,
   "materials": [
-    "cotton-yarn"
+    "yarn"
   ],
   "technique": {
     "th": "โครเชต์",

@@ -1,0 +1,34 @@
+{
+  "no": 34,
+  "slug": "cream-bucket-hat",
+  "name": {
+    "th": "หมวกบักเก็ตสีครีม",
+    "en": "Cream Bucket Hat"
+  },
+  "line": "knit",
+  "type": "hat",
+  "priceFrom": 590,
+  "materials": [
+    "yarn"
+  ],
+  "technique": {
+    "th": "โครเชต์",
+    "en": "Crochet"
+  },
+  "hours": 7,
+  "size": "รอบศีรษะ 56–58 cm",
+  "colours": [
+    "cream"
+  ],
+  "status": "ready",
+  "featured": false,
+  "images": [
+    "./images/cream-bucket-hat.png"
+  ],
+  "story": {
+    "th": "หมวกถักทรงบักเก็ต ไหมพรมนุ่ม ใส่สบาย กันแดดได้ ถักมือทีละห่วง",
+    "en": "A crocheted bucket hat in soft yarn, light and comfortable, stitched loop by loop."
+  },
+  "added": "2026-10-02",
+  "dummy": true
+}

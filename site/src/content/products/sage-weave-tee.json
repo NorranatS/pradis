@@ -5,10 +5,11 @@
     "th": "เสื้อแถบผ้าทอเซจ",
     "en": "Sage Weave Tee"
   },
-  "category": "tee",
+  "line": "craft",
+  "type": "tee",
   "priceFrom": 690,
   "materials": [
-    "thai-silk",
+    "local-cloth",
     "cotton"
   ],
   "technique": {

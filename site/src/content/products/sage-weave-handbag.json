@@ -1,0 +1,34 @@
+{
+  "no": 38,
+  "slug": "sage-weave-handbag",
+  "name": {
+    "th": "กระเป๋าถือผ้าทอสีเซจ",
+    "en": "Sage Weave Handbag"
+  },
+  "line": "craft",
+  "type": "handbag",
+  "priceFrom": 1390,
+  "materials": [
+    "local-cloth"
+  ],
+  "technique": {
+    "th": "ตัดเย็บมือ",
+    "en": "Hand-sewn"
+  },
+  "hours": 10,
+  "size": "30 × 24 cm",
+  "colours": [
+    "sage"
+  ],
+  "status": "made-to-order",
+  "featured": false,
+  "images": [
+    "./images/sage-weave-handbag.png"
+  ],
+  "story": {
+    "th": "กระเป๋าถือจากผ้าพื้นเมืองทอมือ ตัดเย็บด้วยมือ ลายผ้าแต่ละผืนไม่ซ้ำกัน",
+    "en": "A handbag cut and sewn by hand from local handwoven cloth; no two weaves are alike."
+  },
+  "added": "2026-09-24",
+  "dummy": true
+}

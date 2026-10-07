@@ -1,4 +1,4 @@
-# Pradis: site plan
+# แม่ประดิษฐ์ (Mae Pradit): site plan
 
 Agreed 2026-10-05. Design direction: mockup **4+ Journal Luxe** (`mockups/4b-journal-luxe.html`).
 
@@ -32,7 +32,7 @@ Agreed 2026-10-05. Design direction: mockup **4+ Journal Luxe** (`mockups/4b-jou
 
 /collection       Every piece on one page
   Search          live search by name, colour or material (TH + EN)
-  Filters         category (bags · accessories · tees) · colour · material · availability (ready / made to order)
+  Filters         line tabs (ประดิษฐ์ถัก · ประดิษฐ์คราฟท์) · type · colour · material · availability
   Sort            newest · price
   Grid            2 columns on phone, 3–4 on desktop, compact cards (photo, name, from-price)
   Quick view      tap → pop-up with photos, colours, price, [Order]; the URL updates so it can be shared
@@ -77,4 +77,4 @@ Next: real photos and products, Mom's real story, final contacts, review pass, d
 - LINE: personal ID for now (`site/src/config/site.ts`). Could upgrade to an Official Account later for pre-filled messages.
 - Real Instagram handle and Facebook page URL
 - Product list (spreadsheet) and photos
-- Final brand name (it's kept in one config file)
+- ~~Final brand name~~: แม่ประดิษฐ์ / Mae Pradit, with two lines ประดิษฐ์ถัก and ประดิษฐ์คราฟท์ (2026-10-07)

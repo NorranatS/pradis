@@ -5,10 +5,11 @@
     "th": "เสื้อครามแถบผ้าทอ",
     "en": "Night Weave Tee"
   },
-  "category": "tee",
+  "line": "craft",
+  "type": "tee",
   "priceFrom": 690,
   "materials": [
-    "thai-silk",
+    "local-cloth",
     "cotton"
   ],
   "technique": {

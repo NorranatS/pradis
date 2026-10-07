@@ -5,10 +5,11 @@
     "th": "ที่รองแก้วสีดินเผา",
     "en": "Terracotta Coasters"
   },
-  "category": "accessory",
+  "line": "knit",
+  "type": "coaster",
   "priceFrom": 450,
   "materials": [
-    "cotton-yarn"
+    "yarn"
   ],
   "technique": {
     "th": "โครเชต์",

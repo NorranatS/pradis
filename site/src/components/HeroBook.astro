@@ -22,8 +22,8 @@ const label = (p: CollectionEntry<'products'>) => `${p.data.name[lang]} (${t(lan
       <div class="slot left" id="slot-left">
         <div class="lp plate khit active" data-s="0">
           <div class="bookplate">
-            <p class="sc">{th ? 'สมุดงานถักของแม่ · เล่มที่ ๑' : 'Mom’s crochet notebook · Volume one'}</p>
-            <h1>{th ? <>ถักด้วย<em>มือแม่</em></> : <>Made by <em>Mom’s hands</em></>}</h1>
+            <p class="sc">{th ? 'สมุดผลงานของแม่ · เล่มที่ ๑' : 'Mom’s handmade notebook · Volume one'}</p>
+            <h1>{th ? <>ประดิษฐ์ด้วย<em>มือแม่</em></> : <>Made by <em>Mom’s hands</em></>}</h1>
             <p class="lede">{site.tagline[lang]}{th ? ' ไม่มีใบไหนซ้ำ' : ', no two alike.'}</p>
             <div class="ctas">
               <a class="btn ink" href={href(lang, '/collection')}>{t(lang, 'cta.seeAll')} <small>{digits(lang, total)}</small></a>
@@ -64,7 +64,7 @@ const label = (p: CollectionEntry<'products'>) => `${p.data.name[lang]} (${t(lan
             {k === 0
               ? <div class="cap"><span class="no">{th ? 'ชิ้นเด่นประจำเล่ม' : 'Featured'} · {t(lang, 'label.no')} {digits(lang, p.data.no, 2)}</span><a class="name" href={href(lang, `/collection/${p.data.slug}`)}>{p.data.name[lang]}</a><span class="pr">{price(lang, p.data.priceFrom)}</span></div>
               : <div class="cap mini"><span class="no">{t(lang, 'label.no')} {digits(lang, p.data.no, 2)}</span></div>}
-            <span class="tag" aria-hidden="true"><span class="string"></span><span class="card"><b>{digits(lang, p.data.no, 2)}</b>{th ? 'ถักมือ' : 'handmade'}</span></span>
+            <span class="tag" aria-hidden="true"><span class="string"></span><span class="card"><b>{digits(lang, p.data.no, 2)}</b>{p.data.line === 'knit' ? (th ? 'ถักมือ' : 'crocheted') : (th ? 'ทำมือ' : 'handmade')}</span></span>
             <span class="folio r">{digits(lang, k * 2 + 1)}</span>
           </div>
         ))}
@@ -77,9 +77,9 @@ const label = (p: CollectionEntry<'products'>) => `${p.data.name[lang]} (${t(lan
       <div class="cover" id="cover" role="button" tabindex="0" aria-label={th ? 'เปิดสมุด' : 'Open the notebook'}>
         <div class="face cover-front bookcloth">
           <div class="frame">
-            <span class="sc">{th ? 'สมุดงานถักของแม่' : 'Mom’s crochet notebook'}</span>
+            <span class="sc">{th ? 'สมุดผลงานของแม่' : 'Mom’s handmade notebook'}</span>
             <span class="foil">{site.name.th}</span>
-            <span class="sub">{th ? 'กระเป๋าถักมือ · ผ้าคราม · ไหมไทย' : 'Hand crochet · indigo · Thai silk'}</span>
+            <span class="sub">{th ? 'ประดิษฐ์ถัก · ประดิษฐ์คราฟท์' : 'Pradit Knit · Pradit Craft'}</span>
             <span class="sc">{th ? 'เล่มที่ ๑' : 'Volume one'}</span>
           </div>
         </div>
@@ -94,7 +94,7 @@ const label = (p: CollectionEntry<'products'>) => `${p.data.name[lang]} (${t(lan
       <button class="pg" data-turn="1" aria-label={th ? 'หน้าถัดไป' : 'Next page'}>›</button>
     </div>
     <div class="hero-foot">
-      <span class="dots"><span>{th ? 'ถักมือ 100%' : '100% handmade'}</span><span>{th ? 'ผ้าคราม & ไหมไทย' : 'Indigo & Thai silk'}</span><span>{t(lang, 'label.anyColour')}</span></span>
+      <span class="dots"><span>{th ? 'ทำมือ 100%' : '100% handmade'}</span><span>{th ? 'ไหมพรม · เชือกฟอกนิ่ม · ผ้าพื้นเมือง' : 'Yarn · soft rope · local cloth'}</span><span>{t(lang, 'label.anyColour')}</span></span>
     </div>
   </div>
 </section>
@@ -219,7 +219,7 @@ const label = (p: CollectionEntry<'products'>) => `${p.data.name[lang]} (${t(lan
   .frame { display: grid; place-items: center; gap: 10px; padding: 50px 40px; border: 1px solid rgba(226,196,126,.55); outline: 1px solid rgba(226,196,126,.25); outline-offset: 8px; text-align: center; }
   .frame .sc { color: #CDB98C; }
   .frame .sub { font-size: 14px; color: #B8C1D9; letter-spacing: .04em; }
-  .frame .foil { font: 500 clamp(56px, 6vw, 90px)/1.2 var(--serif-th);
+  .frame .foil { font: 500 clamp(46px, 4.6vw, 72px)/1.25 var(--serif-th); white-space: nowrap;
     background: linear-gradient(100deg, #8C6622 0%, #E8CD8A 22%, #B98C3D 40%, #F4E4B4 55%, #A07732 75%, #DDBB70 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
   .pager { display: flex; justify-content: center; align-items: center; gap: 16px; padding: 26px 0 0; font-size: 14px; color: #B8C1D9; }
@@ -269,7 +269,7 @@ const label = (p: CollectionEntry<'products'>) => `${p.data.name[lang]} (${t(lan
     .cover { left: 0; width: 100%; }
     .cover-front, .cover-back { border-radius: 3px; }
     .frame { padding: 40px 26px; }
-    .frame .foil { font-size: 54px; }
+    .frame .foil { font-size: 44px; }
     .slot.left .shade, .slot.right .shade { border-radius: 3px; background: linear-gradient(90deg, rgba(20,14,6,.5), rgba(20,14,6,.15) var(--edge, 40%), transparent calc(var(--edge, 40%) + 18%)); }
     .open-hint { margin-top: 16px; font-size: 14px; }
     .pager { padding-top: 16px; }

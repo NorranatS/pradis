@@ -2,16 +2,17 @@
 
 ## Products: `products.csv`
 
-One row per product. Open it in Excel, Numbers or Google Sheets (export as CSV again when you're done). Right now it holds **32 dummy products**; replace them with the real ones.
+One row per product. Open it in Excel, Numbers or Google Sheets (export as CSV again when you're done). Right now it holds **41 dummy products**; replace them with the real ones.
 
 | Column | What to write | Example |
 |---|---|---|
 | `no` | Product number, shown as ๐๑, ๐๒… | `1` |
 | `slug` | Web address name (English, dashes). Leave empty to make it from `name_en` | `sage-market-tote` |
 | `name_th` / `name_en` | Name in Thai / English | `กระเป๋าตลาดสีเซจ` / `Sage Market Tote` |
-| `category` | `bag`, `accessory` or `tee` | `bag` |
+| `line` | `knit` (ประดิษฐ์ถัก) or `craft` (ประดิษฐ์คราฟท์) | `knit` |
+| `type` | `hat`, `shoulder-bag`, `phone-bag`, `coaster`, `tee`, `handbag`, `purse`, `other` | `hat` |
 | `price_from` | Starting price in baht | `1290` |
-| `materials` | Separate with `\|` : `cotton-yarn`, `cotton-cord`, `rope-yarn`, `indigo-cloth`, `thai-silk`, `cotton` | `cotton-cord\|indigo-cloth` |
+| `materials` | Separate with `\|` : `yarn` (ไหมพรม), `soft-rope` (เชือกฟอกนิ่ม), `local-cloth` (ผ้าพื้นเมือง), `indigo-cloth`, `thai-silk`, `cotton` | `soft-rope\|indigo-cloth` |
 | `technique_th` / `technique_en` | Optional; defaults to crochet | `โครเชต์` |
 | `hours` | Hours to make | `16` |
 | `size` | Free text | `38 × 32 cm` |

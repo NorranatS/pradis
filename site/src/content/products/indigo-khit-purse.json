@@ -1,0 +1,35 @@
+{
+  "no": 39,
+  "slug": "indigo-khit-purse",
+  "name": {
+    "th": "กระเป๋าใส่เงินผ้าครามลายขิด",
+    "en": "Indigo Khit Purse"
+  },
+  "line": "craft",
+  "type": "purse",
+  "priceFrom": 450,
+  "materials": [
+    "indigo-cloth",
+    "local-cloth"
+  ],
+  "technique": {
+    "th": "ตัดเย็บมือ",
+    "en": "Hand-sewn"
+  },
+  "hours": 4,
+  "size": "18 × 11 cm",
+  "colours": [
+    "indigo"
+  ],
+  "status": "ready",
+  "featured": false,
+  "images": [
+    "./images/indigo-khit-purse.png"
+  ],
+  "story": {
+    "th": "กระเป๋าใส่เงินใบเล็กจากผ้าพื้นเมือง ซิปทองเหลือง พู่ห้อยทำมือ",
+    "en": "A small purse in local handwoven cloth with a brass zip and a hand-tied tassel."
+  },
+  "added": "2026-10-01",
+  "dummy": true
+}

@@ -1,0 +1,34 @@
+{
+  "no": 41,
+  "slug": "mustard-weave-purse",
+  "name": {
+    "th": "กระเป๋าใส่เงินผ้าทอสีมัสตาร์ด",
+    "en": "Mustard Weave Purse"
+  },
+  "line": "craft",
+  "type": "purse",
+  "priceFrom": 420,
+  "materials": [
+    "local-cloth"
+  ],
+  "technique": {
+    "th": "ตัดเย็บมือ",
+    "en": "Hand-sewn"
+  },
+  "hours": 4,
+  "size": "18 × 11 cm",
+  "colours": [
+    "mustard"
+  ],
+  "status": "made-to-order",
+  "featured": false,
+  "images": [
+    "./images/mustard-weave-purse.png"
+  ],
+  "story": {
+    "th": "กระเป๋าใส่เงินใบเล็กจากผ้าพื้นเมือง ซิปทองเหลือง พู่ห้อยทำมือ",
+    "en": "A small purse in local handwoven cloth with a brass zip and a hand-tied tassel."
+  },
+  "added": "2026-09-22",
+  "dummy": true
+}

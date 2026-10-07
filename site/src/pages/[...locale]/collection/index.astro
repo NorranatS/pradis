@@ -3,13 +3,14 @@ import { getCollection } from 'astro:content';
 import { getImage } from 'astro:assets';
 import Base from '../../../layouts/Base.astro';
 import ProductCard from '../../../components/ProductCard.astro';
-import { t, href, digits, price, categories, statuses, colours, materials, localePaths, type Lang } from '../../../i18n';
+import { t, href, digits, price, lines, types, statuses, colours, materials, localePaths, type Lang } from '../../../i18n';
 
 export const getStaticPaths = localePaths;
 const { lang } = Astro.props as { lang: Lang };
 
 const all = (await getCollection('products')).sort((a, b) => b.data.added.localeCompare(a.data.added) || a.data.no - b.data.no);
-const count = (c?: string) => (c ? all.filter((p) => p.data.category === c).length : all.length);
+const count = (l?: string) => (l ? all.filter((p) => p.data.line === l).length : all.length);
+const usedTypes = (Object.keys(types) as (keyof typeof types)[]).filter((ty) => all.some((p) => p.data.type === ty));
 const usedColours = [...new Set(all.flatMap((p) => p.data.colours))];
 const usedMaterials = [...new Set(all.flatMap((p) => p.data.materials))];
 
@@ -18,14 +19,14 @@ const catalog = await Promise.all(all.map(async (e, i) => {
   const big = await getImage({ src: p.images[0], width: 900 });
   return {
     slug: p.slug, order: i, no: digits(lang, p.no, 2), title: p.name[lang],
-    cat: p.category, priceNum: p.priceFrom, price: price(lang, p.priceFrom),
+    cat: p.line, type: p.type, lineName: lines[p.line][lang], typeName: types[p.type][lang], priceNum: p.priceFrom, price: price(lang, p.priceFrom),
     status: p.status, statusLabel: statuses[p.status][lang],
     colours: p.colours, colourNames: p.colours.map((c) => colours[c]?.[lang] ?? c), colourHex: p.colours.map((c) => colours[c]?.hex ?? '#ccc'),
     materials: p.materials, materialNames: p.materials.map((m) => materials[m]?.[lang] ?? m).join(', '),
     hours: digits(lang, p.hours), size: p.size, technique: p.technique[lang], story: p.story[lang],
     img: big.src, url: href(lang, `/collection/${p.slug}`), added: p.added,
     orderLabel: `${p.name[lang]} (${t(lang, 'label.no')} ${digits(lang, p.no, 2)})`,
-    search: [p.name.th, p.name.en, ...p.colours.flatMap((c) => [colours[c]?.th, colours[c]?.en, c]), ...p.materials.flatMap((m) => [materials[m]?.th, materials[m]?.en]), categories[p.category].th, categories[p.category].en].join(' ').toLowerCase(),
+    search: [p.name.th, p.name.en, ...p.colours.flatMap((c) => [colours[c]?.th, colours[c]?.en, c]), ...p.materials.flatMap((m) => [materials[m]?.th, materials[m]?.en]), lines[p.line].th, lines[p.line].en, types[p.type].th, types[p.type].en].join(' ').toLowerCase(),
   };
 }));
 const labels = {
@@ -39,7 +40,7 @@ const labels = {
     <span class="deco scrap kraftpaper" style="width:160px;height:110px;right:20%;top:170px;rotate:-6deg" data-depth="-0.04"></span>
     <div class="wrap">
       <div class="label-card sheet top reveal">
-        <p class="sc">{lang === 'th' ? 'สมุดงานถักของแม่' : 'Mom’s crochet notebook'}</p>
+        <p class="sc">{lang === 'th' ? 'สมุดผลงานของแม่' : 'Mom’s handmade notebook'}</p>
         <h1>{lang === 'th' ? <>ผลงาน<em>ทั้งหมด</em></> : <>The <em>collection</em></>}</h1>
         <p>{lang === 'th' ? `ทั้งหมด ${digits(lang, all.length)} ชิ้น ทุกชิ้นถักมือ สั่งทำในสีที่ชอบได้` : `${all.length} handmade pieces. Most can be made in your colour.`}</p>
       </div>
@@ -72,8 +73,8 @@ const labels = {
         <div class="tb-tabs">
           <div class="tabs" role="group" aria-label="Category">
             <button class="tab" data-cat="" aria-pressed="true">{t(lang, 'filter.all')}<sup>{digits(lang, count())}</sup></button>
-            {(['bag', 'accessory', 'tee'] as const).map((c) => (
-              <button class="tab" data-cat={c} aria-pressed="false">{categories[c][lang]}<sup>{digits(lang, count(c))}</sup></button>
+            {(['knit', 'craft'] as const).map((c) => (
+              <button class="tab" data-cat={c} aria-pressed="false">{lines[c][lang]}<sup>{digits(lang, count(c))}</sup></button>
             ))}
           </div>
           <button class="more" id="more-toggle" aria-expanded="false" aria-controls="more">
@@ -81,6 +82,10 @@ const labels = {
           </button>
         </div>
         <div class="more-panel" id="more" hidden>
+          <fieldset>
+            <legend>{t(lang, 'filter.type')}</legend>
+            <div class="chips">{usedTypes.map((ty) => <button class="chip" data-type={ty} aria-pressed="false">{types[ty][lang]}</button>)}</div>
+          </fieldset>
           <fieldset>
             <legend>{t(lang, 'filter.colour')}</legend>
             <div class="swatches">
@@ -129,7 +134,7 @@ const labels = {
         </div>
       </div>
       <div class="qv-info">
-        <p class="sc"><span>{labels.no}</span> <span data-f="no"></span> · <span data-f="statusLabel"></span></p>
+        <p class="sc"><span data-f="lineName"></span> · <span data-f="typeName"></span> · <span>{labels.no}</span> <span data-f="no"></span> · <span data-f="statusLabel"></span></p>
         <h2 data-f="title"></h2>
         <p class="qv-price" data-f="price"></p>
         <p class="qv-story" data-f="story"></p>
@@ -194,7 +199,7 @@ const labels = {
   .more .plus { display: inline-grid; place-items: center; width: 20px; height: 20px; border: 1px solid currentColor; border-radius: 50%; font-size: 14px; line-height: 1; transition: rotate .3s; }
   .more[aria-expanded="true"] .plus { rotate: 45deg; }
   .more .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ochre); }
-  .more-panel { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 24px; padding: 18px 2px 24px; border-top: 1px dashed var(--faint); }
+  .more-panel { display: grid; grid-template-columns: 1.1fr 1.7fr 1fr 1fr; gap: 24px; padding: 18px 2px 24px; border-top: 1px dashed var(--faint); }
   .more-panel[hidden] { display: none; }
   fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
   legend { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
@@ -269,22 +274,22 @@ const labels = {
   const thai = document.documentElement.lang === 'th';
   const fmt = (n: number) => (thai ? String(n).replace(/\d/g, (d) => '๐๑๒๓๔๕๖๗๘๙'[+d]) : String(n));
 
-  const state = { cat: '', q: '', colour: new Set<string>(), mat: new Set<string>(), status: new Set<string>(), sort: 'new' };
+  const state = { cat: '', q: '', type: new Set<string>(), colour: new Set<string>(), mat: new Set<string>(), status: new Set<string>(), sort: 'new' };
   let visible: string[] = data.map((d) => d.slug);
 
   function readUrl() {
     const u = new URLSearchParams(location.search);
-    state.cat = u.get('cat') || '';
+    state.cat = u.get('line') || '';
     state.q = u.get('q') || '';
     state.sort = u.get('sort') || 'new';
-    (['colour', 'mat', 'status'] as const).forEach((k) => { state[k] = new Set((u.get(k) || '').split(',').filter(Boolean)); });
+    (['type', 'colour', 'mat', 'status'] as const).forEach((k) => { state[k] = new Set((u.get(k) || '').split(',').filter(Boolean)); });
   }
   function writeUrl(extra?: { p?: string | null }) {
     const u = new URLSearchParams();
-    if (state.cat) u.set('cat', state.cat);
+    if (state.cat) u.set('line', state.cat);
     if (state.q) u.set('q', state.q);
     if (state.sort !== 'new') u.set('sort', state.sort);
-    (['colour', 'mat', 'status'] as const).forEach((k) => state[k].size && u.set(k, [...state[k]].join(',')));
+    (['type', 'colour', 'mat', 'status'] as const).forEach((k) => state[k].size && u.set(k, [...state[k]].join(',')));
     const p = extra?.p !== undefined ? extra.p : new URLSearchParams(location.search).get('p');
     if (p) u.set('p', p);
     const s = u.toString();
@@ -298,7 +303,8 @@ const labels = {
     document.querySelectorAll<HTMLElement>('[data-colour]').forEach((b) => b.setAttribute('aria-pressed', String(state.colour.has(b.dataset.colour!))));
     document.querySelectorAll<HTMLElement>('[data-mat]').forEach((b) => b.setAttribute('aria-pressed', String(state.mat.has(b.dataset.mat!))));
     document.querySelectorAll<HTMLElement>('[data-status]').forEach((b) => b.setAttribute('aria-pressed', String(state.status.has(b.dataset.status!))));
-    const extra = state.colour.size + state.mat.size + state.status.size;
+    document.querySelectorAll<HTMLElement>('[data-type]').forEach((b) => b.setAttribute('aria-pressed', String(state.type.has(b.dataset.type!))));
+    const extra = state.type.size + state.colour.size + state.mat.size + state.status.size;
     moreToggle.querySelector<HTMLElement>('.dot')!.hidden = !extra;
   }
 
@@ -306,6 +312,7 @@ const labels = {
     const words = state.q.toLowerCase().trim().split(/\s+/).filter(Boolean);
     let list = data.filter((d) =>
       (!state.cat || d.cat === state.cat) &&
+      (!state.type.size || state.type.has(d.type)) &&
       (!state.colour.size || d.colours.some((c: string) => state.colour.has(c))) &&
       (!state.mat.size || d.materials.some((m: string) => state.mat.has(m))) &&
       (!state.status.size || state.status.has(d.status)) &&
@@ -319,7 +326,7 @@ const labels = {
     visible.forEach((slug) => grid.appendChild(cards.get(slug)!));
     countEl.textContent = fmt(visible.length);
     empty.hidden = visible.length > 0;
-    const filtered = state.cat || state.q || state.colour.size || state.mat.size || state.status.size;
+    const filtered = state.cat || state.q || state.type.size || state.colour.size || state.mat.size || state.status.size;
     clearBtn.hidden = !filtered;
     syncControls();
     writeUrl();
@@ -329,7 +336,7 @@ const labels = {
 
   function clearAll() {
     Object.assign(state, { cat: '', q: '', sort: 'new' });
-    state.colour.clear(); state.mat.clear(); state.status.clear();
+    state.type.clear(); state.colour.clear(); state.mat.clear(); state.status.clear();
     apply();
   }
 
@@ -337,7 +344,7 @@ const labels = {
     const t = e.target as HTMLElement;
     const cat = t.closest<HTMLElement>('[data-cat]');
     if (cat) { state.cat = cat.dataset.cat || ''; apply(); return; }
-    for (const [attr, key] of [['colour', 'colour'], ['mat', 'mat'], ['status', 'status']] as const) {
+    for (const [attr, key] of [['type', 'type'], ['colour', 'colour'], ['mat', 'mat'], ['status', 'status']] as const) {
       const b = t.closest<HTMLElement>(`[data-${attr}]`);
       if (b) { const v = b.dataset[attr]!; state[key].has(v) ? state[key].delete(v) : state[key].add(v); apply(); return; }
     }
@@ -399,7 +406,7 @@ const labels = {
 
   readUrl();
   apply();
-  if (state.colour.size || state.mat.size || state.status.size) { more.hidden = false; moreToggle.setAttribute('aria-expanded', 'true'); }
+  if (state.type.size || state.colour.size || state.mat.size || state.status.size) { more.hidden = false; moreToggle.setAttribute('aria-expanded', 'true'); }
   const p = new URLSearchParams(location.search).get('p');
   if (p && bySlug.has(p)) openQuick(p);
 </script>

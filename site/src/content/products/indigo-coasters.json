@@ -5,10 +5,11 @@
     "th": "ที่รองแก้วสีคราม",
     "en": "Indigo Coasters"
   },
-  "category": "accessory",
+  "line": "knit",
+  "type": "coaster",
   "priceFrom": 450,
   "materials": [
-    "cotton-yarn"
+    "yarn"
   ],
   "technique": {
     "th": "โครเชต์",

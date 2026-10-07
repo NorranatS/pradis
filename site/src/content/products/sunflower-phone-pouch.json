@@ -5,10 +5,11 @@
     "th": "ถุงมือถือทานตะวัน",
     "en": "Sunflower Phone Pouch"
   },
-  "category": "accessory",
+  "line": "knit",
+  "type": "phone-bag",
   "priceFrom": 390,
   "materials": [
-    "cotton-yarn"
+    "yarn"
   ],
   "technique": {
     "th": "โครเชต์",

@@ -1,6 +1,6 @@
 ---
 import { site, links } from '../config/site';
-import { t, href, digits, categories, type Lang } from '../i18n';
+import { t, href, digits, lines, type Lang } from '../i18n';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -16,7 +16,7 @@ const year = lang === 'th' ? digits('th', site.year + 543) : site.year;
       <div>
         <ul>
           <li><a href={href(lang, '/collection')}>{t(lang, 'nav.collection')}</a></li>
-          {(['bag', 'accessory', 'tee'] as const).map((c) => <li><a href={href(lang, `/collection?cat=${c}`)}>{categories[c][lang]}</a></li>)}
+          {(['knit', 'craft'] as const).map((c) => <li><a href={href(lang, `/collection?line=${c}`)}>{lines[c][lang]}</a></li>)}
           <li><a href={href(lang, '/story')}>{t(lang, 'nav.story')}</a></li>
           <li><a href={href(lang, '/order')}>{t(lang, 'nav.order')}</a></li>
         </ul>

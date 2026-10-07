@@ -5,10 +5,11 @@
     "th": "กระเป๋าดอกคราม",
     "en": "The Indigo Bloom"
   },
-  "category": "bag",
+  "line": "knit",
+  "type": "shoulder-bag",
   "priceFrom": 890,
   "materials": [
-    "cotton-cord",
+    "soft-rope",
     "indigo-cloth"
   ],
   "technique": {

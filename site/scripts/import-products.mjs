@@ -12,7 +12,8 @@ const photoDir = join(repo, 'content', 'product-photos');
 const outDir = join(siteDir, 'src', 'content', 'products');
 const imgDir = join(outDir, 'images');
 
-const CATEGORIES = ['bag', 'accessory', 'tee'];
+const LINES = ['knit', 'craft'];
+const TYPES = ['hat', 'shoulder-bag', 'phone-bag', 'coaster', 'tee', 'handbag', 'purse', 'other'];
 const STATUSES = ['ready', 'made-to-order', 'coming-soon'];
 
 function parseCsv(text) {
@@ -52,7 +53,8 @@ const products = rows.map((r, i) => {
     no: Number(get('no')) || i + 1,
     slug: get('slug') || slugify(name_en),
     name: { th: get('name_th'), en: name_en },
-    category: get('category'),
+    line: get('line'),
+    type: get('type') || 'other',
     priceFrom: Number(get('price_from').replace(/[^\d.]/g, '')),
     materials: list(get('materials')),
     technique: { th: get('technique_th') || 'โครเชต์', en: get('technique_en') || 'Crochet' },
@@ -67,7 +69,8 @@ const products = rows.map((r, i) => {
     dummy: /^(yes|y|true|1)$/i.test(get('dummy')),
   };
   if (!p.name.th || !p.name.en) errors.push(`row ${line}: name_th and name_en are required`);
-  if (!CATEGORIES.includes(p.category)) errors.push(`row ${line}: category must be one of ${CATEGORIES.join(', ')}`);
+  if (!LINES.includes(p.line)) errors.push(`row ${line}: line must be knit (ประดิษฐ์ถัก) or craft (ประดิษฐ์คราฟท์)`);
+  if (!TYPES.includes(p.type)) errors.push(`row ${line}: type must be one of ${TYPES.join(', ')}`);
   if (!STATUSES.includes(p.status)) errors.push(`row ${line}: status must be one of ${STATUSES.join(', ')}`);
   if (!p.priceFrom) errors.push(`row ${line}: price_from is missing`);
   if (!p.images.length) errors.push(`row ${line}: at least one image is required`);

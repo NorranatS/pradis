@@ -5,10 +5,11 @@
     "th": "กระเป๋าเชือกฟอกสีมะกอก",
     "en": "Olive Rope Tote"
   },
-  "category": "bag",
+  "line": "knit",
+  "type": "shoulder-bag",
   "priceFrom": 990,
   "materials": [
-    "rope-yarn"
+    "soft-rope"
   ],
   "technique": {
     "th": "โครเชต์",

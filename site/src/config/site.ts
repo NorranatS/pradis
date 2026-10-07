@@ -1,17 +1,17 @@
 // One place for everything that will change when the brand is finalised.
 export const site = {
-  name: { th: 'ประดิษฐ์', en: 'Pradis' },
-  wordmark: 'PRADIS',
+  name: { th: 'แม่ประดิษฐ์', en: 'Mae Pradit' },
+  wordmark: 'MAE PRADIT',
   tagline: {
-    th: 'กระเป๋าถักมือ ผ้าคราม และไหมไทย ทำทีละใบโดยแม่',
-    en: 'Hand-crocheted bags in indigo and Thai silk, made one at a time by Mom',
+    th: 'งานถักและงานคราฟท์ทำมือโดยแม่ จากไหมพรม เชือกฟอกนิ่ม และผ้าพื้นเมือง',
+    en: 'Hand-crocheted and handcrafted pieces by Mom, in yarn, soft rope and local Thai cloth',
   },
   year: 2026,
   contact: {
-    // Personal LINE ID for now (no pre-filled messages). Switch to an Official Account later.
-    lineId: 'pradis.handmade',
-    instagram: 'pradis.handmade',
-    facebookPage: 'pradishandmade',
+    // PLACEHOLDERS: replace with Mom's real accounts. Personal LINE ID for now (no pre-filled messages).
+    lineId: 'maepradit',
+    instagram: 'maepradit',
+    facebookPage: 'maepradit',
     phone: '08X-XXX-XXXX',
     phoneHref: 'tel:0000000000',
     email: 'hello@example.com',

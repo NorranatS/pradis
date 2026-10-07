@@ -5,10 +5,11 @@
     "th": "เสื้อแถบผ้าทอคราม",
     "en": "Indigo Weave Tee"
   },
-  "category": "tee",
+  "line": "craft",
+  "type": "tee",
   "priceFrom": 690,
   "materials": [
-    "thai-silk",
+    "local-cloth",
     "cotton"
   ],
   "technique": {

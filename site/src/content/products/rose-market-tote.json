@@ -5,10 +5,11 @@
     "th": "กระเป๋าตลาดสีกุหลาบ",
     "en": "Rose Market Tote"
   },
-  "category": "bag",
+  "line": "knit",
+  "type": "shoulder-bag",
   "priceFrom": 1290,
   "materials": [
-    "cotton-yarn"
+    "yarn"
   ],
   "technique": {
     "th": "โครเชต์",

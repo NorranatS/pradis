@@ -3,7 +3,7 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import { Image, getImage } from 'astro:assets';
 import Base from '../../../layouts/Base.astro';
 import ProductCard from '../../../components/ProductCard.astro';
-import { t, href, digits, price, categories, statuses, colours, materials, localePaths, type Lang } from '../../../i18n';
+import { t, href, digits, price, lines, types, statuses, colours, materials, localePaths, type Lang } from '../../../i18n';
 
 export async function getStaticPaths() {
   const products = await getCollection('products');
@@ -16,7 +16,7 @@ const p = product.data;
 const og = await getImage({ src: p.images[0], width: 1200, format: 'png' });
 const related = products
   .filter((x) => x.data.slug !== p.slug)
-  .map((x) => ({ x, score: (x.data.category === p.category ? 2 : 0) + x.data.colours.filter((c) => p.colours.includes(c)).length + x.data.materials.filter((m) => p.materials.includes(m)).length }))
+  .map((x) => ({ x, score: (x.data.line === p.line ? 1 : 0) + (x.data.type === p.type ? 2 : 0) + x.data.colours.filter((c) => p.colours.includes(c)).length + x.data.materials.filter((m) => p.materials.includes(m)).length }))
   .sort((a, b) => b.score - a.score || a.x.data.no - b.x.data.no)
   .slice(0, 4).map((r) => r.x);
 const orderLabel = `${p.name[lang]} (${t(lang, 'label.no')} ${digits(lang, p.no, 2)})`;
@@ -28,7 +28,8 @@ const bg = ['var(--sage-pale)', 'var(--apricot-pale)', 'var(--butter)', '#E6DCCB
     <div class="wrap">
       <nav class="crumbs" aria-label="Breadcrumb">
         <a href={href(lang, '/collection')}>{t(lang, 'nav.collection')}</a> /
-        <a href={href(lang, `/collection?cat=${p.category}`)}>{categories[p.category][lang]}</a>
+        <a href={href(lang, `/collection?line=${p.line}`)}>{lines[p.line][lang]}</a> /
+        <a href={href(lang, `/collection?line=${p.line}&type=${p.type}`)}>{types[p.type][lang]}</a>
       </nav>
       <div class="pgrid2">
         <div class="stage">
@@ -40,7 +41,7 @@ const bg = ['var(--sage-pale)', 'var(--apricot-pale)', 'var(--butter)', '#E6DCCB
           </div>
         </div>
         <div class="info sheet top reveal">
-          <p class="sc">{categories[p.category][lang]} · {t(lang, 'label.no')} {digits(lang, p.no, 2)}</p>
+          <p class="sc">{lines[p.line][lang]} · {types[p.type][lang]} · {t(lang, 'label.no')} {digits(lang, p.no, 2)}</p>
           <h1>{p.name[lang]}</h1>
           <p class="pr">{price(lang, p.priceFrom)} <span class:list={['st', p.status]}>{statuses[p.status][lang]}</span></p>
           <p class="story">{p.story[lang]}</p>
@@ -52,12 +53,13 @@ const bg = ['var(--sage-pale)', 'var(--apricot-pale)', 'var(--butter)', '#E6DCCB
             <dt>{t(lang, 'label.colours')}</dt>
             <dd class="cols">
               {p.colours.map((c) => <span><i style={`background:${colours[c]?.hex}`}></i>{colours[c]?.[lang]}</span>)}
-              {p.status !== 'coming-soon' && <span class="any">· {t(lang, 'label.anyColour')}</span>}
+              {p.status !== 'coming-soon' && <span class="any">· {t(lang, p.line === 'knit' ? 'label.anyColour' : 'label.anyCloth')}</span>}
             </dd>
           </dl>
           {p.status !== 'coming-soon'
             ? <button class="btn solid big" data-order={orderLabel}>{t(lang, 'cta.order')} →</button>
             : <button class="btn ghost big" data-order={orderLabel}>{lang === 'th' ? 'แจ้งเตือนเมื่อพร้อม' : 'Tell me when ready'}</button>}
+          <p class="motto"><b>{lines[p.line][lang]}</b> · {lines[p.line].motto[lang]}</p>
           <p class="howto"><a class="link-arrow" href={href(lang, '/order')}>{t(lang, 'nav.order')} →</a></p>
         </div>
       </div>
@@ -106,6 +108,8 @@ const bg = ['var(--sage-pale)', 'var(--apricot-pale)', 'var(--butter)', '#E6DCCB
   .cols .any { color: var(--muted); }
   .big { padding: 18px 34px; font-size: 16px; }
   .howto { margin: 18px 0 0; font-size: 14px; }
+  .motto { margin: 22px 0 0; padding-top: 14px; border-top: 1px dashed var(--faint); font-size: 14px; color: var(--muted); }
+  .motto b { color: var(--ochre); font-weight: 500; }
   .related { padding: 20px 0 110px; }
   .rgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 36px 26px; margin-top: 46px; }
   @media (max-width: 900px) {

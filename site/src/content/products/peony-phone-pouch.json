@@ -5,10 +5,11 @@
     "th": "ถุงมือถือดอกโบตั๋น",
     "en": "Peony Phone Pouch"
   },
-  "category": "accessory",
+  "line": "knit",
+  "type": "phone-bag",
   "priceFrom": 390,
   "materials": [
-    "cotton-yarn"
+    "yarn"
   ],
   "technique": {
     "th": "โครเชต์",

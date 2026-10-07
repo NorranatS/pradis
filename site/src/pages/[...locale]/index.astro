@@ -7,7 +7,7 @@ import Thread from '../../components/Thread.astro';
 import HeroBook from '../../components/HeroBook.astro';
 import maker from '../../assets/maker.jpg';
 import { links, site } from '../../config/site';
-import { t, href, digits, price, categories, materials, localePaths, type Lang } from '../../i18n';
+import { t, href, digits, price, lines, types, materials, localePaths, type Lang } from '../../i18n';
 
 export const getStaticPaths = localePaths;
 const { lang } = Astro.props as { lang: Lang };
@@ -18,13 +18,55 @@ const byNew = [...all].sort((a, b) => b.data.added.localeCompare(a.data.added));
 const shelf = [...byNew.filter((p) => p.data.featured), ...byNew.filter((p) => !p.data.featured)].slice(0, 10);
 const heroItems = byNew.filter((p) => p.data.featured).slice(0, 6);
 const feat = all.find((p) => p.data.slug === 'sage-market-tote') ?? byNew[0];
-const count = (c: string) => all.filter((p) => p.data.category === c).length;
+const count = (l: string) => all.filter((p) => p.data.line === l).length;
+const lineInfo = (['knit', 'craft'] as const).map((l) => {
+  const mine = byNew.filter((p) => p.data.line === l);
+  const picks = [...mine.filter((p) => p.data.featured), ...mine.filter((p) => !p.data.featured)];
+  // one of each type first, so the three pictures show the range
+  const seen = new Set<string>(); const show = [];
+  for (const p of picks) if (!seen.has(p.data.type) && show.length < 3) { seen.add(p.data.type); show.push(p); }
+  for (const p of picks) if (show.length < 3 && !show.includes(p)) show.push(p);
+  return { key: l, info: lines[l], count: mine.length, show, typesUsed: lines[l].types.filter((ty) => mine.some((p) => p.data.type === ty)) };
+});
 const f = feat.data;
 const fLabel = `${f.name[lang]} (${t(lang, 'label.no')} ${digits(lang, f.no, 2)})`;
 ---
 <Base lang={lang} onDark>
   <!-- 1. Open notebook hero -->
   <HeroBook lang={lang} items={heroItems} total={all.length} />
+
+  <!-- 2. Two lines: ประดิษฐ์ถัก and ประดิษฐ์คราฟท์ -->
+  <section class="lines-sec">
+    <div class="wrap">
+      <div class="lines-head reveal">
+        <p class="sc">{site.name[lang]}</p>
+        <h2>{th ? <>สองสายงาน <em>จากมือแม่</em></> : <>Two lines, <em>one pair of hands</em></>}</h2>
+      </div>
+      <div class="lines-grid">
+        {lineInfo.map((L, i) => (
+          <article class:list={['line-card', L.key]}>
+            <div class:list={['under back', i === 0 ? 'kraftpaper' : 'linen']}></div>
+            <div class:list={['line-body top reveal', `d${i}`, L.key === 'craft' ? 'bookcloth' : 'sheet']}>
+              <p class="sc">{th ? `สายงานที่ ${digits(lang, i + 1)}` : `Line ${i + 1}`}</p>
+              <h3>{L.info[lang]}</h3>
+              <p class="motto">{L.info.motto[lang]}</p>
+              <p class="about">{L.info.about[lang]}</p>
+              <div class="pics" aria-hidden="true">
+                {L.show.map((p) => <span class="pic"><Image src={p.data.images[0]} alt="" width={260} /></span>)}
+              </div>
+              <p class="mats"><span>{th ? 'วัสดุ' : 'Materials'}</span>{L.info.materials.map((m) => <b>{materials[m]?.[lang]}</b>)}</p>
+              <nav class="types" aria-label={L.info[lang]}>
+                {L.typesUsed.map((ty) => <a href={href(lang, `/collection?line=${L.key}&type=${ty}`)}>{types[ty][lang]}</a>)}
+              </nav>
+              <a class:list={['btn', L.key === 'craft' ? 'solid' : 'ink']} href={href(lang, `/collection?line=${L.key}`)}>
+                {th ? `ดู${L.info.th}ทั้งหมด` : `See all of ${L.info.en}`} <small>{digits(lang, L.count)}</small>
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
 
   <!-- 2. The shelf: every new piece in one swipeable row -->
   <section class="shelf-sec">
@@ -36,8 +78,8 @@ const fLabel = `${f.name[lang]} (${t(lang, 'label.no')} ${digits(lang, f.no, 2)}
       </div>
       <div class="shelf-side reveal d1">
         <div class="cat-links">
-          {(['bag', 'accessory', 'tee'] as const).map((c) => (
-            <a class="chip" href={href(lang, `/collection?cat=${c}`)}>{categories[c][lang]} <small>{digits(lang, count(c))}</small></a>
+          {(['knit', 'craft'] as const).map((c) => (
+            <a class="chip" href={href(lang, `/collection?line=${c}`)}>{lines[c][lang]} <small>{digits(lang, count(c))}</small></a>
           ))}
         </div>
         <div class="arrows">
@@ -234,6 +276,59 @@ const fLabel = `${f.name[lang]} (${t(lang, 'label.no')} ${digits(lang, f.no, 2)}
   .channels-row .channel { border: 0; }
   @media (max-width: 760px) { .steps, .channels-row { grid-template-columns: 1fr; } .step { margin-top: 0 !important; } }
 
+
+  /* ── Two lines ── */
+  .lines-sec { padding: 100px 0 40px; }
+  .lines-head { text-align: center; margin-bottom: 50px; }
+  .lines-head h2 { font-size: clamp(42px, 5vw, 72px); margin-top: 8px; }
+  :global(:lang(th)) .lines-head h2 { font-size: clamp(32px, 3.8vw, 54px); }
+  .lines-head h2 em { color: var(--ochre); }
+  .lines-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: stretch; }
+  .line-card { position: relative; }
+  .line-card .back { inset: 16px -12px -14px 16px; rotate: 1.2deg; box-shadow: var(--shadow); }
+  .line-card.craft .back { inset: 16px 16px -14px -12px; rotate: -1.2deg; }
+  .line-body { height: 100%; display: flex; flex-direction: column; padding: clamp(28px, 3.4vw, 46px); outline: 1px solid rgba(181,135,58,.38); outline-offset: -9px; rotate: -.4deg; }
+  .line-card.craft .line-body { rotate: .4deg; color: #EDE7DA; box-shadow: 0 30px 50px -28px rgba(5,10,25,.8); outline-color: rgba(226,196,126,.45); }
+  .line-card.craft .sc { color: #B8C1D9; }
+  .line-body h3 { font-size: clamp(40px, 4.4vw, 64px); margin: 8px 0 6px; }
+  :global(:lang(th)) .line-body h3 { font-size: clamp(32px, 3.4vw, 48px); }
+  .line-card.craft h3 { background: linear-gradient(100deg, #B98C3D, #F4E4B4 45%, #C9A050); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .motto { font: italic 500 20px/1.4 var(--display); color: var(--kram); margin: 0 0 10px; }
+  :global(:lang(th)) .motto { font: 400 17px/1.6 var(--serif-th); }
+  .line-card.craft .motto { color: #E2C47E; }
+  .about { color: var(--muted); margin: 0 0 18px; font-size: 15px; }
+  .line-card.craft .about { color: #C3CBE0; }
+  .pics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 0 0 18px; }
+  .pics .pic { aspect-ratio: 1; display: grid; place-items: center; padding: 10%; background: var(--sage-pale); box-shadow: inset 0 0 0 1px rgba(0,0,0,.04); }
+  .pics .pic:nth-child(2) { background: var(--apricot-pale); }
+  .pics .pic:nth-child(3) { background: var(--butter); }
+  .line-card.craft .pics .pic { background: rgba(255,255,255,.08); box-shadow: inset 0 0 0 1px rgba(226,196,126,.25); }
+  .pics :global(img) { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; filter: drop-shadow(0 10px 8px rgba(0,0,0,.25)); }
+  .mats { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; margin: 0 0 12px; font-size: 14px; }
+  .mats span { color: var(--muted); margin-right: 4px; }
+  .line-card.craft .mats span { color: #B8C1D9; }
+  .mats b { font-weight: 500; padding: 2px 10px; border: 1px solid rgba(181,135,58,.45); border-radius: 3px; }
+  .types { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0 0 24px; font-size: 15px; }
+  .types a { text-decoration: none; border-bottom: 1px dotted currentColor; }
+  .types a:hover { color: var(--ochre); }
+  .line-body .btn { margin-top: auto; align-self: flex-start; }
+  .line-body .btn small { opacity: .75; font-size: 12px; }
+  @media (max-width: 860px) {
+    .lines-grid { grid-template-columns: 1fr; gap: 34px; }
+  }
+  @media (max-width: 760px) {
+    .lines-sec { padding: 60px 0 10px; }
+    .lines-head { margin-bottom: 26px; }
+    .lines-head h2 { font-size: 34px; }
+    :global(:lang(th)) .lines-head h2 { font-size: 27px; }
+    .line-body { padding: 26px 22px 26px; outline-offset: -7px; }
+    .line-body h3 { font-size: 38px; }
+    :global(:lang(th)) .line-body h3 { font-size: 30px; }
+    :global(:lang(th)) .motto { font-size: 15.5px; }
+    .about { font-size: 14px; }
+    .pics { gap: 8px; }
+    .types { font-size: 14px; gap: 4px 12px; }
+  }
   /* ── Phone: same sections as desktop, compact ── */
   @media (max-width: 760px) {
     .shelf-sec { padding: 56px 0 56px; }

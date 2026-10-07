@@ -9,9 +9,9 @@ export const getStaticPaths = localePaths;
 const { lang } = Astro.props as { lang: Lang };
 const th = lang === 'th';
 const swatches = [
-  { cls: 'c-kram', th: ['ผ้าคราม', 'ย้อมจากต้นคราม ย้อมซ้ำหลายรอบจนได้สีน้ำเงินลึก สีจะลึกขึ้นทุกครั้งที่ซัก'], en: ['Indigo cloth', 'Dyed from the indigo plant, dipped again and again. The blue deepens with every wash.'] },
-  { cls: 'c-silk', th: ['ผ้าไหมไทย', 'ทอมือ เงางามแบบธรรมชาติ ใช้ทำดอกไม้ ขอบกระเป๋า และงานปัก'], en: ['Thai silk', 'Hand-woven with a natural sheen, used for flowers, trims and embroidery.'] },
-  { cls: 'c-cotton', th: ['เชือกและด้ายฝ้าย', 'นุ่มมือ แข็งแรง ระบายอากาศดี ใช้ได้ทุกวัน ไม่มีเอาต์'], en: ['Cotton cord & yarn', 'Soft in the hand, strong and breathable, made for every day.'] },
+  { cls: 'c-yarn', th: ['ไหมพรม', 'เส้นนุ่ม หลากสี ถักได้ทั้งหมวก กระเป๋า และที่รองแก้ว · ประดิษฐ์ถัก'], en: ['Yarn', 'Soft and colourful, for hats, bags and coasters · Pradit Knit'] },
+  { cls: 'c-rope', th: ['เชือกฟอกนิ่ม', 'นุ่มมือแต่แข็งแรง ทรงสวยอยู่ตัว เหมาะกับกระเป๋าใช้ทุกวัน · ประดิษฐ์ถัก'], en: ['Soft rope yarn', 'Soft in the hand yet sturdy; holds its shape for everyday bags · Pradit Knit'] },
+  { cls: 'c-cloth', th: ['ผ้าพื้นเมือง', 'ผ้าทอมือจากชุมชน ลายแต่ละผืนเล่าภูมิปัญญาท้องถิ่น · ประดิษฐ์คราฟท์'], en: ['Local handwoven cloth', 'Woven by local communities; every pattern carries local wisdom · Pradit Craft'] },
 ];
 const steps = th
   ? [['เลือกด้าย', 'ฝ้าย คราม หรือไหม ตามเรื่องที่อยากเล่า'], ['ถักทีละห่วง', 'หลายพันห่วงต่อหนึ่งใบ ใช้เวลาหลายวัน'], ['ตกแต่ง', 'ดอกไม้ พู่ และกระดุม เย็บด้วยมือ'], ['ส่งมอบ', 'ห่ออย่างตั้งใจ พร้อมการ์ดเขียนมือ']]
@@ -125,9 +125,11 @@ const steps = th
   .lbl b { display: block; font: 500 26px/1.2 var(--display); margin: 2px 0 4px; }
   :global(:lang(th)) .lbl b { font: 400 21px/1.4 var(--serif-th); }
   .lbl > span { font-size: 14px; color: var(--muted); }
-  .c-kram { background: repeating-linear-gradient(90deg, rgba(255,255,255,.08) 0 1px, transparent 1px 4px), repeating-linear-gradient(0deg, rgba(0,0,0,.18) 0 1px, transparent 1px 3px), radial-gradient(circle at 30% 30%, #5370B5, #1C2C55 70%); }
-  .c-silk { background: repeating-linear-gradient(90deg, rgba(120,80,20,.08) 0 1px, transparent 1px 2px), linear-gradient(115deg, #D9B97A 0%, #F1DDB0 30%, #C99F5A 52%, #EBD3A0 72%, #BF934E 100%); }
-  .c-cotton { background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.6) 0 2px, transparent 3px) 0 0 / 8px 8px, radial-gradient(circle at 50% 50%, rgba(110,96,74,.25) 0 2.4px, transparent 3px) 4px 4px / 8px 8px, #EDE3D1; }
+  .c-yarn { background: radial-gradient(ellipse 3.5px 5px at 50% 50%, rgba(255,255,255,.4) 0 55%, transparent 75%) 0 0 / 9px 11px, radial-gradient(ellipse 3.5px 5px at 50% 50%, rgba(40,60,40,.25) 0 55%, transparent 75%) 4.5px 5.5px / 9px 11px, #9DB197; }
+  .c-rope { background: repeating-linear-gradient(45deg, #EBD6B5 0 4px, #D9B588 4px 8px, #C9A06E 8px 10px, #E4C9A0 10px 13px); }
+  .c-cloth { background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='40' fill='none' stroke='%23F1DFB4' stroke-width='2.4'%3E%3Cpath d='M17 6 28 20 17 34 6 20Z'/%3E%3Crect x='14.5' y='17.5' width='5' height='5' fill='%23F1DFB4' stroke='none'/%3E%3C/svg%3E") 0 18px / 34px 60px repeat-x,
+    repeating-linear-gradient(180deg, #A9583A 0 12px, #8C4430 12px 14px, #A9583A 14px 18px, #233A73 18px 64px, #E2C47E 64px 66px, #A9583A 66px 96px); }
 
   .process { padding: 20px 0 140px; }
   .strip { left: 0; right: 0; top: 55%; height: 120px; rotate: -0.7deg; }

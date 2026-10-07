@@ -5,10 +5,11 @@
     "th": "ตาข่ายฟ้า",
     "en": "Sky Filet Tote"
   },
-  "category": "bag",
+  "line": "knit",
+  "type": "shoulder-bag",
   "priceFrom": 1190,
   "materials": [
-    "cotton-cord"
+    "soft-rope"
   ],
   "technique": {
     "th": "โครเชต์",

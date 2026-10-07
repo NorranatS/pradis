@@ -1,0 +1,34 @@
+{
+  "no": 37,
+  "slug": "terracotta-weave-handbag",
+  "name": {
+    "th": "กระเป๋าถือผ้าทอสีดินเผา",
+    "en": "Terracotta Weave Handbag"
+  },
+  "line": "craft",
+  "type": "handbag",
+  "priceFrom": 1390,
+  "materials": [
+    "local-cloth"
+  ],
+  "technique": {
+    "th": "ตัดเย็บมือ",
+    "en": "Hand-sewn"
+  },
+  "hours": 10,
+  "size": "30 × 24 cm",
+  "colours": [
+    "terracotta"
+  ],
+  "status": "ready",
+  "featured": false,
+  "images": [
+    "./images/terracotta-weave-handbag.png"
+  ],
+  "story": {
+    "th": "กระเป๋าถือจากผ้าพื้นเมืองทอมือ ตัดเย็บด้วยมือ ลายผ้าแต่ละผืนไม่ซ้ำกัน",
+    "en": "A handbag cut and sewn by hand from local handwoven cloth; no two weaves are alike."
+  },
+  "added": "2026-09-27",
+  "dummy": true
+}

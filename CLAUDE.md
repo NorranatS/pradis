@@ -1,6 +1,11 @@
-# Pradis (ประดิษฐ์): brand website
+# แม่ประดิษฐ์ (Mae Pradit): brand website
 
-A website for a family handcraft brand: hand-knitted bags and accessories, and custom t-shirts crafted with Thai local materials (e.g. silk). The brand name is **not final**. "Pradis / ประดิษฐ์" is the working name.
+A website for a family handcraft brand, **แม่ประดิษฐ์ / Mae Pradit** (confirmed 2026-10-07). Two product lines:
+
+- **ประดิษฐ์ถัก (Pradit Knit)**: crocheted by hand only; no machine can copy it. Materials: ไหมพรม (yarn) and เชือกฟอกนิ่ม (soft rope yarn). Products: hats, shoulder bags, phone bags, coasters, other.
+- **ประดิษฐ์คราฟท์ (Pradit Craft)**: handmade pieces combining personal skill, creativity and local wisdom; unique and full of meaning. Material: ผ้าพื้นเมือง (local handwoven cloth). Products: T-shirts, handbags, purses, other.
+
+Product data uses `line` (knit | craft) and `type` (hat, shoulder-bag, phone-bag, coaster, tee, handbag, purse, other). Line names, mottos and type labels live in `site/src/i18n/index.ts`.
 
 ## What the site is
 
@@ -17,7 +22,7 @@ Thai, heart-warming, cute but elegant. Rooted in Thai local craft. Must NOT look
 
 - Never use AI-generated images as product photos. Current dummies are recolours of Mom's real bags plus drawn placeholders (marked `dummy: yes`).
 - Thai typography is first-class: choose Thai fonts deliberately and pair them with the English fonts. Check line-height and wrapping for Thai text.
-- Keep the brand name, contacts and colours in one config spot, because the name will change.
+- Keep the brand name, contacts and colours in one config spot (`site/src/config/site.ts`).
 - No off-the-shelf UI-kit look (glow gradients, bento grids, generic SaaS heroes). Restyle any borrowed component.
 - Read `references/` (images + notes) before making design decisions.
 - Confirm the plan with the user before installing packages or scaffolding.

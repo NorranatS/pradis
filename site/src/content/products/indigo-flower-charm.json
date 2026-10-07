@@ -5,10 +5,11 @@
     "th": "พวงกุญแจดอกคราม",
     "en": "Indigo Flower Charm"
   },
-  "category": "accessory",
+  "line": "knit",
+  "type": "other",
   "priceFrom": 190,
   "materials": [
-    "cotton-yarn"
+    "yarn"
   ],
   "technique": {
     "th": "โครเชต์",

@@ -1,0 +1,35 @@
+{
+  "no": 36,
+  "slug": "indigo-weave-handbag",
+  "name": {
+    "th": "กระเป๋าถือผ้าครามลายขิด",
+    "en": "Indigo Khit Handbag"
+  },
+  "line": "craft",
+  "type": "handbag",
+  "priceFrom": 1490,
+  "materials": [
+    "indigo-cloth",
+    "local-cloth"
+  ],
+  "technique": {
+    "th": "ตัดเย็บมือ",
+    "en": "Hand-sewn"
+  },
+  "hours": 10,
+  "size": "30 × 24 cm",
+  "colours": [
+    "indigo"
+  ],
+  "status": "made-to-order",
+  "featured": true,
+  "images": [
+    "./images/indigo-weave-handbag.png"
+  ],
+  "story": {
+    "th": "กระเป๋าถือจากผ้าพื้นเมืองทอมือ ตัดเย็บด้วยมือ ลายผ้าแต่ละผืนไม่ซ้ำกัน",
+    "en": "A handbag cut and sewn by hand from local handwoven cloth; no two weaves are alike."
+  },
+  "added": "2026-10-04",
+  "dummy": true
+}
