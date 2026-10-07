@@ -1,5 +1,5 @@
 {
-  "no": 11,
+  "no": 15,
   "slug": "apricot-rope-tote",
   "name": {
     "th": "กระเป๋าเชือกฟอกสีแอปริคอต",
@@ -21,7 +21,7 @@
     "apricot"
   ],
   "status": "ready",
-  "featured": true,
+  "featured": false,
   "images": [
     "./images/apricot-rope-tote.png"
   ],

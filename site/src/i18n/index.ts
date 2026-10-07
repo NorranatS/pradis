@@ -103,6 +103,7 @@ export const colours: Record<string, { th: string; en: string; hex: string }> = 
   navy: { th: 'กรมท่า', en: 'Navy', hex: '#2A3A62' },
   mint: { th: 'มิ้นต์', en: 'Mint', hex: '#9FD3BD' },
   sunflower: { th: 'ทานตะวัน', en: 'Sunflower', hex: '#EDCB55' },
+  brick: { th: 'ส้มอิฐ', en: 'Brick', hex: '#D98B73' },
 };
 
 export const materials: Record<string, { th: string; en: string }> = {
@@ -112,6 +113,8 @@ export const materials: Record<string, { th: string; en: string }> = {
   'indigo-cloth': { th: 'ผ้าคราม', en: 'Indigo cloth' },
   'thai-silk': { th: 'ไหมไทย', en: 'Thai silk' },
   cotton: { th: 'ผ้าฝ้าย', en: 'Cotton' },
+  denim: { th: 'ผ้ายีนส์', en: 'Denim' },
+  'embroidery-thread': { th: 'ไหมปัก', en: 'Embroidery thread' },
 };
 
 export function t(lang: Lang, key: keyof typeof ui) {

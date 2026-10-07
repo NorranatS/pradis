@@ -1,0 +1,40 @@
+{
+  "no": 1,
+  "slug": "rose-denim-handbag",
+  "name": {
+    "th": "กระเป๋าถือผ้ายีนส์ปักกุหลาบ",
+    "en": "Rose Embroidered Denim Handbag"
+  },
+  "line": "craft",
+  "type": "handbag",
+  "priceFrom": 1890,
+  "materials": [
+    "denim",
+    "embroidery-thread"
+  ],
+  "technique": {
+    "th": "ปักมือ · ตัดเย็บมือ",
+    "en": "Hand embroidery · hand-sewn"
+  },
+  "hours": 24,
+  "size": "32 × 24 × 12 cm",
+  "colours": [
+    "navy",
+    "rose"
+  ],
+  "status": "ready",
+  "featured": true,
+  "images": [
+    "./images/real-rose-denim-handbag.png",
+    "./images/real-rose-denim-handbag-1.jpg",
+    "./images/real-rose-denim-handbag-2.jpg",
+    "./images/real-rose-denim-handbag-3.jpg",
+    "./images/real-rose-denim-handbag-4.jpg"
+  ],
+  "story": {
+    "th": "กระเป๋าถือผ้ายีนส์สีกรม ปักลายกุหลาบและเถาใบด้วยมือทีละฝีเข็ม หูจับไม้ทรงโค้ง มีซิปและช่องด้านในกว้าง",
+    "en": "A navy denim handbag embroidered by hand with roses and trailing leaves, stitch by stitch; curved wooden handles, a zip top and a roomy lined interior."
+  },
+  "added": "2026-10-07",
+  "dummy": false
+}

@@ -1,0 +1,37 @@
+{
+  "no": 3,
+  "slug": "leaf-green-tote",
+  "name": {
+    "th": "กระเป๋าถักสีเขียวใบไม้",
+    "en": "Leaf Green Crochet Tote"
+  },
+  "line": "knit",
+  "type": "shoulder-bag",
+  "priceFrom": 990,
+  "materials": [
+    "yarn"
+  ],
+  "technique": {
+    "th": "โครเชต์",
+    "en": "Crochet"
+  },
+  "hours": 16,
+  "size": "38 × 34 cm",
+  "colours": [
+    "sage"
+  ],
+  "status": "ready",
+  "featured": true,
+  "images": [
+    "./images/real-leaf-green-tote.png",
+    "./images/real-leaf-green-tote-1.jpg",
+    "./images/real-leaf-green-tote-2.jpg",
+    "./images/real-leaf-green-tote-3.jpg"
+  ],
+  "story": {
+    "th": "กระเป๋าสะพายถักสีเขียวใบไม้ ลายตาข่ายโปร่ง สายยาวสะพายไหล่สบาย ห้อยพู่ถักมือ",
+    "en": "A leaf-green crochet shoulder tote in an open mesh, with long comfortable straps and a hand-tied tassel."
+  },
+  "added": "2026-10-07",
+  "dummy": false
+}

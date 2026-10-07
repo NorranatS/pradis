@@ -1,5 +1,5 @@
 {
-  "no": 7,
+  "no": 11,
   "slug": "moon-filet-tote",
   "name": {
     "th": "ตาข่ายจันทร์",
@@ -21,7 +21,7 @@
     "cream"
   ],
   "status": "ready",
-  "featured": true,
+  "featured": false,
   "images": [
     "./images/moon-filet-tote.png"
   ],

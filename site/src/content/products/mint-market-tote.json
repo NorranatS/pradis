@@ -1,0 +1,37 @@
+{
+  "no": 2,
+  "slug": "mint-market-tote",
+  "name": {
+    "th": "กระเป๋าถักสีมิ้นต์",
+    "en": "Mint Crochet Market Tote"
+  },
+  "line": "knit",
+  "type": "shoulder-bag",
+  "priceFrom": 990,
+  "materials": [
+    "yarn"
+  ],
+  "technique": {
+    "th": "โครเชต์",
+    "en": "Crochet"
+  },
+  "hours": 16,
+  "size": "40 × 34 cm",
+  "colours": [
+    "mint"
+  ],
+  "status": "ready",
+  "featured": true,
+  "images": [
+    "./images/real-mint-market-tote.png",
+    "./images/real-mint-market-tote-1.jpg",
+    "./images/real-mint-market-tote-2.jpg",
+    "./images/real-mint-market-tote-3.jpg"
+  ],
+  "story": {
+    "th": "กระเป๋าสะพายถักลายตาข่าย V โปร่งเบา สีมิ้นต์สดใส ห้อยพู่ถักมือ ใส่ของได้เยอะ",
+    "en": "An airy V-stitch shoulder tote in fresh mint, with a hand-tied tassel and plenty of room."
+  },
+  "added": "2026-10-07",
+  "dummy": false
+}

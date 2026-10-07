@@ -1,5 +1,5 @@
 {
-  "no": 16,
+  "no": 20,
   "slug": "indigo-bloom",
   "name": {
     "th": "กระเป๋าดอกคราม",
@@ -23,7 +23,7 @@
     "indigo"
   ],
   "status": "ready",
-  "featured": true,
+  "featured": false,
   "images": [
     "./images/indigo-bloom.png"
   ],

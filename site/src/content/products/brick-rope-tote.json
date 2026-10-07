@@ -1,0 +1,37 @@
+{
+  "no": 4,
+  "slug": "brick-rope-tote",
+  "name": {
+    "th": "กระเป๋าเชือกฟอกนิ่มสีส้มอิฐ",
+    "en": "Brick Soft-Rope Tote"
+  },
+  "line": "knit",
+  "type": "shoulder-bag",
+  "priceFrom": 890,
+  "materials": [
+    "soft-rope"
+  ],
+  "technique": {
+    "th": "โครเชต์",
+    "en": "Crochet"
+  },
+  "hours": 14,
+  "size": "34 × 28 cm",
+  "colours": [
+    "brick"
+  ],
+  "status": "ready",
+  "featured": true,
+  "images": [
+    "./images/real-brick-rope-tote.png",
+    "./images/real-brick-rope-tote-1.jpg",
+    "./images/real-brick-rope-tote-2.jpg",
+    "./images/real-brick-rope-tote-3.jpg"
+  ],
+  "story": {
+    "th": "กระเป๋าถักจากเชือกฟอกนิ่มสีส้มอิฐ ลายนูนแน่นทรงสวยอยู่ตัว ติดกระดุมกะลา ใช้ได้ทุกวัน",
+    "en": "A brick-coloured tote crocheted in soft rope, with a firm raised stitch that holds its shape and a coconut-shell button."
+  },
+  "added": "2026-10-07",
+  "dummy": false
+}
