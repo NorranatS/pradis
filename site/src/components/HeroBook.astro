@@ -198,6 +198,10 @@ const label = (p: CollectionEntry<'products'>) => `${p.data.name[lang]} (${t(lan
   :global(.leaf .side > .inner > *) { visibility: visible !important; }
   :global(.leaf .light) { position: absolute; inset: 0; pointer-events: none; background: #1A1206; opacity: 0; }
   :global(.leaf *) { animation: none !important; transition: none !important; }
+  /* copies on the turning page skip shadows and filters: much cheaper to draw on phones */
+  :global(.leaf img) { filter: none !important; }
+  :global(.leaf .ground) { box-shadow: none !important; }
+  :global(.leaf), :global(.leaf .strip) { will-change: transform; }
 
   /* Cover */
   .cover { position: absolute; z-index: 9; top: 0; bottom: 0; left: 50%; width: 50%; transform-origin: left center; transform-style: preserve-3d; pointer-events: none; }
@@ -288,7 +292,10 @@ const label = (p: CollectionEntry<'products'>) => `${p.data.name[lang]} (${t(lan
     const fmt = (n: number) => (thai ? String(n).replace(/\d/g, (d) => '๐๑๒๓๔๕๖๗๘๙'[+d]) : String(n));
     const singleMQ = matchMedia('(max-width: 860px)');
     const motionMQ = matchMedia('(prefers-reduced-motion: no-preference)');
-    const STRIPS = 8, DURATION = 1150, CURL = 64;
+    const CURL = 64;
+    // phones get a lighter leaf (fewer strips) and a slightly quicker turn
+    const stripCount = () => (single ? 5 : 8);
+    const duration = () => (single ? 950 : 1150);
 
     // Phone reading order: bookplate, lead piece, then details → photo for each piece
     const seq: HTMLElement[] = [];
@@ -345,7 +352,7 @@ const label = (p: CollectionEntry<'products'>) => `${p.data.name[lang]} (${t(lan
 
     // A leaf made of nested strips; each strip shows its slice of the front and back pages
     function makeLeaf(front: HTMLElement, back: HTMLElement, x: number, W: number) {
-      const w = W / STRIPS;
+      const STRIPS = stripCount(), w = W / STRIPS;
       const root = document.createElement('div');
       root.className = 'leaf';
       root.style.left = x + 'px';
@@ -384,11 +391,11 @@ const label = (p: CollectionEntry<'products'>) => `${p.data.name[lang]} (${t(lan
       let start = 0;
       function frame(now: number) {
         if (!start) start = now;
-        const t = Math.min(1, (now - start) / DURATION);
+        const t = Math.min(1, (now - start) / duration());
         const e = ease(t);
         const theta = dir > 0 ? -180 * e : -180 * (1 - e);
         // the free edge leads, so the page curves; flat again when it lands
-        const bend = (bendSign * CURL * Math.sin(Math.PI * t)) / STRIPS;
+        const bend = (bendSign * CURL * Math.sin(Math.PI * t)) / strips.length;
         strips.forEach((st, i) => {
           st.el.style.transform = `rotateY(${i === 0 ? theta : bend}deg)`;
           const abs = Math.max(-180, Math.min(0, theta + i * bend));

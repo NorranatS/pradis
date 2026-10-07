@@ -19,7 +19,7 @@ function headerState() { header?.classList.toggle('scrolled', scrollY > 40); }
 /* Parallax scraps in the background */
 const decos = [...document.querySelectorAll<HTMLElement>('[data-depth]')];
 function parallax() {
-  if (reduce) return;
+  if (reduce || !finePointer) return; // no scroll-driven movement on touch devices
   for (const el of decos) {
     const r = el.getBoundingClientRect();
     const offset = (r.top + r.height / 2 - innerHeight / 2) * Number(el.dataset.depth);

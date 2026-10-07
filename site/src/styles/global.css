@@ -86,7 +86,8 @@ button { font: inherit; color: inherit; }
 }
 
 /* Decorative scraps floating in the page background (parallax by data-depth) */
-.deco { position: absolute; z-index: 0; pointer-events: none; will-change: translate; }
+.deco { position: absolute; z-index: 0; pointer-events: none; }
+@media (hover: hover) and (pointer: fine) { .deco { will-change: translate; } }
 .deco.scrap { box-shadow: 0 24px 40px -24px rgba(36, 30, 26, .5); }
 .deco.loop { opacity: .5; }
 
@@ -98,7 +99,8 @@ button { font: inherit; color: inherit; }
 .js .reveal.d3 { transition-delay: .3s; }
 
 /* ───────── Tilt (3D) ───────── */
-[data-tilt] { transform-style: preserve-3d; transition: transform .5s var(--ease), box-shadow .5s var(--ease); will-change: transform; }
+[data-tilt] { transform-style: preserve-3d; transition: transform .5s var(--ease), box-shadow .5s var(--ease); }
+@media (hover: hover) and (pointer: fine) { [data-tilt] { will-change: transform; } }
 [data-tilt].tilting { transition: transform .08s linear, box-shadow .3s; }
 
 @media (prefers-reduced-motion: reduce) {
@@ -271,4 +273,15 @@ dialog[open] { animation: pop .4s var(--ease); }
   /* the thread stitches along the page edges on phones */
   .thread-layer path:first-child { stroke-width: 3; }
   .thread-layer path:last-child { stroke-width: 1.2; }
+}
+
+/* ───────── Phones and touch devices: keep the look, drop the expensive effects ───────── */
+@media (max-width: 860px), (hover: none) {
+  body { background-attachment: scroll; }
+  /* blended full-screen grain is costly to repaint while scrolling; a faint normal overlay looks the same */
+  body::before { mix-blend-mode: normal; opacity: .07; }
+  .site-header { backdrop-filter: none; }
+  .site-header:not(.on-dark), .site-header.scrolled { background: rgba(251, 247, 239, .98); }
+  dialog::backdrop { backdrop-filter: none; background: rgba(20, 24, 40, .65); }
+  .thread-layer g { filter: none; }
 }

@@ -57,17 +57,19 @@ export function stitch(root: HTMLElement) {
     draw();
   }
 
+  // On touch devices the thread is simply drawn in full, so scrolling does no extra work
+  const still = reduce || !matchMedia('(hover: hover) and (pointer: fine)').matches;
   function draw() {
     if (!H) return;
     const top = root.getBoundingClientRect().top;
-    const reach = reduce ? H : Math.max(0, Math.min(H, innerHeight * 0.8 - top));
+    const reach = still ? H : Math.max(0, Math.min(H, innerHeight * 0.8 - top));
     const clip = `inset(0 0 ${H - reach}px 0)`;
     tSvg.style.clipPath = clip;
     hSvg.style.clipPath = clip;
   }
 
   let tick = false;
-  addEventListener('scroll', () => { if (tick) return; tick = true; requestAnimationFrame(() => { draw(); tick = false; }); }, { passive: true });
+  if (!still) addEventListener('scroll', () => { if (tick) return; tick = true; requestAnimationFrame(() => { draw(); tick = false; }); }, { passive: true });
   addEventListener('resize', build);
   addEventListener('load', build);
   document.fonts?.ready.then(build);
