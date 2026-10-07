@@ -91,4 +91,15 @@ const faq = th
   details p { margin: 0 0 18px; color: var(--muted); }
   .faq .btn { margin-top: 18px; }
   @media (max-width: 860px) { .steps, .channels-sec { grid-template-columns: 1fr; } .step:nth-child(even) { margin-top: 0; } }
+
+  @media (max-width: 760px) {
+    .steps { gap: 14px; }
+    .step { padding: 22px 20px; gap: 16px; }
+    .n { font-size: 44px; }
+    :global(:lang(th)) .step h2 { font-size: 18px; }
+    .step p { font-size: 14px; }
+    .ch-card { padding: 26px 22px; }
+    :global(:lang(th)) .ch-card h2, :global(:lang(th)) .faq h2 { font-size: 24px; }
+    summary { padding: 14px 0; font-size: 15px; }
+  }
 </style>

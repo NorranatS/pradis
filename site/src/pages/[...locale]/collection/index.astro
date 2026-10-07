@@ -212,7 +212,14 @@ const labels = {
   @media (max-width: 1100px) { .pgrid { grid-template-columns: repeat(3, 1fr); } }
   @media (max-width: 760px) {
     .pgrid { grid-template-columns: repeat(2, 1fr); gap: 26px 16px; }
-    .toolbar { position: relative; top: 0; padding: 20px 20px 0; }
+    .toolbar { position: relative; top: 0; padding: 16px 18px 0; margin-bottom: 18px; outline-offset: -7px; }
+    .search input { font-size: 19px; }
+    :global(:lang(th)) .search input { font-size: 16px; }
+    .suggest { gap: 2px 12px; font-size: 13px; }
+    :global(:lang(th)) .suggest button { font-size: 14px; }
+    :global(:lang(th)) .tab { font-size: 14.5px; }
+    .pgrid { gap: 18px 12px !important; }
+    .result-line { margin-bottom: 16px; font-size: 14px; }
     .tb-search { flex-direction: column; align-items: stretch; gap: 14px; }
     .s-key { display: none; }
     .sort { justify-content: space-between; }

@@ -114,4 +114,19 @@ const bg = ['var(--sage-pale)', 'var(--apricot-pale)', 'var(--butter)', '#E6DCCB
     .info { margin: -30px 6px 0; }
     .rgrid { grid-template-columns: repeat(2, 1fr); gap: 24px 16px; }
   }
+
+  @media (max-width: 760px) {
+    .product { padding-bottom: 60px; }
+    .stage { height: 340px; }
+    .stage .bignum { font-size: 110px; }
+    .info { padding: 26px 22px 28px; }
+    .info h1 { font-size: 36px; }
+    :global(:lang(th)) .info h1 { font-size: 27px; }
+    .pr { font-size: 18px; }
+    .story { font-size: 14.5px; }
+    .hours b { font-size: 40px; }
+    .specs { font-size: 14px; }
+    .big { padding: 15px 26px; font-size: 15px; }
+    .rgrid { gap: 18px 12px; margin-top: 24px; }
+  }
 </style>

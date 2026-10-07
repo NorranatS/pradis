@@ -17,13 +17,16 @@ export function stitch(root: HTMLElement) {
   }
 
   function build() {
-    if (innerWidth < 860) { H = 0; return; }
+    const narrow = innerWidth < 760;
     const W = root.offsetWidth; H = root.offsetHeight;
     [tSvg, hSvg].forEach((s) => s.setAttribute('viewBox', `0 0 ${W} ${H}`));
     const pts: [number, number][] = [[W * 0.5, -10]];
     root.querySelectorAll<HTMLElement>('[data-thread]').forEach((el) => {
       const p = pos(el);
-      pts.push([(W * Number(el.dataset.thread)) / 100, p.y + p.h * Number(el.dataset.ty ?? 0.5)]);
+      // On phones the cards fill the width, so the thread keeps to the margins and weaves behind the cards' edges
+      const x = Number(el.dataset.thread);
+      const px = narrow ? (x < 50 ? 2.2 : 97.8) : x;
+      pts.push([(W * px) / 100, p.y + p.h * Number(el.dataset.ty ?? 0.5)]);
     });
     pts.push([W * 0.5, H + 10]);
     let d = `M${pts[0][0]} ${pts[0][1]}`;

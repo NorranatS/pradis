@@ -233,6 +233,58 @@ const fLabel = `${f.name[lang]} (${t(lang, 'label.no')} ${digits(lang, f.no, 2)}
   .channels-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 60px; }
   .channels-row .channel { border: 0; }
   @media (max-width: 760px) { .steps, .channels-row { grid-template-columns: 1fr; } .step { margin-top: 0 !important; } }
+
+  /* ── Phone: same sections as desktop, compact ── */
+  @media (max-width: 760px) {
+    .shelf-sec { padding: 56px 0 56px; }
+    .shelf-head { margin-bottom: 14px; gap: 14px; }
+    .shelf-side { width: 100%; justify-content: space-between; }
+    .arrows { display: none; }
+    .shelf { grid-auto-columns: 156px; gap: 14px; padding: 18px 16px 28px; scroll-padding-inline: 16px; }
+    .shelf-more .n { font-size: 60px; }
+    .featured { padding: 24px 0 70px; }
+    .stage { height: 320px; }
+    .stage .bignum { font-size: 110px; top: -6%; }
+    .chip-note { font-size: 12px; padding: 5px 10px; gap: 6px; }
+    .chip-note b { font-size: 11px; }
+    .feat-card { padding: 24px 22px 26px; margin: -34px 6px 0; outline-offset: -7px; }
+    .feat-card h2 { font-size: 32px; }
+    :global(:lang(th)) .feat-card h2 { font-size: 24px; }
+    .pr { font-size: 17px; }
+    .desc { font-size: 14.5px; }
+    .hours { margin-top: 12px; padding: 10px 0; }
+    .hours b { font-size: 36px; }
+    .mini { font-size: 14px; margin-bottom: 20px; }
+    .statement { padding: 20px 0 70px; }
+    .panel { padding: 34px 24px 36px; gap: 4px; }
+    .huge { font-size: 104px; }
+    .panel h2 { font-size: 28px; }
+    :global(:lang(th)) .panel h2 { font-size: 22px; }
+    .panel p { font-size: 14.5px; margin: 12px 0 20px; }
+    .maker { padding-bottom: 80px; }
+    .print { padding: 10px 10px 36px; }
+    .print figcaption { font-size: 16px; bottom: 8px; left: 12px; }
+    .quote-card { padding: 26px 22px; }
+    .quote-card blockquote { font-size: 26px; }
+    :global(:lang(th)) .quote-card blockquote { font-size: 20px; }
+    .sig { font-size: 22px; margin: 10px 0 12px; }
+    .howto { padding-bottom: 90px; }
+    /* steps become a swipeable row, like the shelf */
+    .steps { display: grid; grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 72%; gap: 14px; margin: 24px -16px 0; padding: 10px 16px 18px;
+      overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 16px; scrollbar-width: none; }
+    .step { scroll-snap-align: start; margin-top: 0 !important; padding: 22px 20px 24px; }
+    .step .n { font-size: 44px; }
+    .step h3 { font-size: 22px; margin: 8px 0 4px; }
+    :global(:lang(th)) .step h3 { font-size: 17px; }
+    .step p { font-size: 13.5px; }
+    .strip2 { height: 120px; top: 50%; }
+    /* contact channels side by side */
+    .channels-row { grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 26px; }
+    .channels-row .channel { flex-direction: column; text-align: center; gap: 6px; padding: 14px 6px; }
+    .channels-row .channel small { display: none; }
+    .channels-row .channel b { font-size: 13px; }
+    .channels-row .channel .ico { width: 30px; height: 30px; font-size: 11px; }
+  }
 </style>
 
 <script>

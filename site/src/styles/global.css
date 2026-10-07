@@ -226,10 +226,49 @@ dialog[open] { animation: pop .4s var(--ease); }
 .thread-layer { z-index: 2; }
 .holes-layer { z-index: 4; }
 .thread-layer svg, .holes-layer svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-@media (max-width: 860px) { .thread-layer, .holes-layer { display: none; } }
 
 /* ───────── Chips ───────── */
 .chip { display: inline-flex; flex: none; white-space: nowrap; align-items: center; gap: 6px; height: 38px; padding: 0 14px; border-radius: 3px; border: 1px solid var(--faint); background: var(--paper-hi); cursor: pointer; font-size: 14px; color: var(--ink); transition: background .25s, color .25s, border-color .25s; }
 .chip small { opacity: .6; font-size: 12px; }
 .chip:hover { border-color: var(--ink); }
 .chip[aria-pressed="true"] { background: var(--kram); border-color: var(--kram); color: #fff; }
+
+/* ───────── Phone scale: same experience as desktop, about 15–25% smaller ───────── */
+@media (max-width: 760px) {
+  :root { --header: 62px; }
+  body { font-size: 15.5px; line-height: 1.7; }
+  .wrap { width: calc(100% - 32px); }
+  .mark { font-size: 19px; gap: 8px; }
+  .mark small { font-size: 9px; letter-spacing: .26em; }
+  .lang { font-size: 12px; }
+  .lang a { padding: 3px 9px; }
+  .sc { font-size: 11px; }
+  :lang(th) .sc { font-size: 12.5px; }
+  .btn { padding: 12px 20px; font-size: 14px; }
+  .btn.small { padding: 8px 14px; font-size: 13px; }
+  .label-card { padding: 18px 22px 20px; outline-offset: -7px; }
+  .label-card h2, .label-card h1 { font-size: 36px; }
+  :lang(th) .label-card h2, :lang(th) .label-card h1 { font-size: 28px; }
+  .label-card p:not(.sc) { font-size: 14.5px; }
+  .chip { height: 34px; padding: 0 12px; font-size: 13px; }
+  .pcard .ground { margin: 7px 7px 0; }
+  .pcard .no { font-size: 22px; left: 9px; }
+  .pcard .badge { font-size: 10.5px; padding: 3px 8px; right: 7px; top: 7px; }
+  .pcard .meta { padding: 10px 11px 12px; }
+  .pcard .meta h3 { font-size: 18px; }
+  :lang(th) .pcard .meta h3 { font-size: 14.5px; }
+  .pcard .meta .row { font-size: 12.5px; }
+  .pcard .meta .sw i { width: 10px; height: 10px; }
+  .order-sheet { padding: 32px 22px 22px; }
+  .order-sheet h2 { font-size: 30px; }
+  :lang(th) .order-sheet h2 { font-size: 24px; }
+  .channel { padding: 12px 14px; }
+  .mobile-bar { bottom: 10px; left: 10px; right: 10px; padding: 7px 7px 7px 16px; font-size: 13px; }
+  .site-footer { font-size: 13px; padding-top: 50px; }
+  .site-footer .brand { font-size: 24px; }
+  .page-head { padding: calc(var(--header) + 34px) 0 26px; }
+  .deco.scrap { scale: .6; }
+  /* the thread stitches along the page edges on phones */
+  .thread-layer path:first-child { stroke-width: 3; }
+  .thread-layer path:last-child { stroke-width: 1.2; }
+}

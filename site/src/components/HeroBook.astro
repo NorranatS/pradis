@@ -68,9 +68,10 @@ const label = (p: CollectionEntry<'products'>) => `${p.data.name[lang]} (${t(lan
             <span class="folio r">{digits(lang, k * 2 + 1)}</span>
           </div>
         ))}
-        <button class="dogear next" data-turn="1" aria-label={th ? 'พลิกหน้าถัดไป' : 'Turn the page'}></button>
         <span class="shade" aria-hidden="true"></span>
       </div>
+
+      <button class="dogear next" data-turn="1" aria-label={th ? 'พลิกหน้าถัดไป' : 'Turn the page'}></button>
 
       <!-- Cover: front = bookcloth with foil title; back = endpaper with the bookplate -->
       <div class="cover" id="cover" role="button" tabindex="0" aria-label={th ? 'เปิดสมุด' : 'Open the notebook'}>
@@ -117,6 +118,7 @@ const label = (p: CollectionEntry<'products'>) => `${p.data.name[lang]} (${t(lan
   @keyframes tapHint { 50% { transform: translateY(-5px); } }
   .book:not(.closed) ~ .open-hint { opacity: 0; height: 0; margin: 0; overflow: hidden; }
   .book.closed ~ .pager { opacity: 0; pointer-events: none; }
+  .book.closed .dogear, .book.opening .dogear { visibility: hidden; }
   .pager { transition: opacity .6s .6s; }
   .book.opened .cover { display: none; }
 
@@ -229,16 +231,46 @@ const label = (p: CollectionEntry<'products'>) => `${p.data.name[lang]} (${t(lan
     .tag, .ribbon { animation: none; }
   }
   @media (max-width: 860px) {
-    .book { grid-template-columns: 1fr; height: auto; perspective: none; }
-    .cover, .dogear, .open-hint { display: none; }
+    /* Phone: a single-page notebook. Same cover, same curling page turn, one page at a time */
+    .book:not(.opened) .slot.left { opacity: 1; } /* the first page sits under the cover */
+    .hero-book { padding-top: calc(var(--header) + 16px); }
+    .book { display: block; height: clamp(500px, calc(100svh - var(--header) - 150px), 620px); perspective: 1500px; perspective-origin: 0 40%; }
     .book.closed { translate: none; }
-    .slot.left { height: 560px; border-radius: 4px 4px 0 0; box-shadow: none; }
-    .slot.right { height: 520px; border-radius: 0 0 4px 4px; }
-    .lp, .rp { border-radius: 0; box-shadow: none; }
-    .lp.plate { padding: 30px 18px; }
-    .lp.info { padding: 34px 24px; }
-    .rp { padding: 50px 22px 50px; }
+    .slot { position: absolute; inset: 0; }
+    .slot.left, .slot.right { border-radius: 3px; box-shadow: 0 2px 0 #D9CCB2, 0 4px 0 #EEE5D3, 0 6px 0 #D2C4A8, 0 40px 60px -30px rgba(3,8,22,.85); }
+    .lp, .rp { border-radius: 3px; box-shadow: inset 20px 0 22px -16px rgba(60,40,15,.32); }
+    .lp.plate { padding: 22px 16px; box-shadow: inset 20px 0 24px -14px rgba(0,0,0,.5); }
+    .bookplate { padding: 28px 22px; outline-offset: -8px; }
+    .bookplate h1 { font-size: 42px; margin: 10px 0 12px; }
+    :global(:lang(th)) .bookplate h1 { font-size: 36px; }
+    .lede { font-size: 14.5px; margin-bottom: 18px; }
+    .ctas { gap: 8px 14px; }
+    .ctas .btn { padding: 11px 18px; font-size: 14px; }
+    .lp.info { padding: 30px 26px 44px 30px; }
+    .lp.info h2 { font-size: 32px; }
+    :global(:lang(th)) .lp.info h2 { font-size: 24px; }
+    .ipr { font-size: 17px; }
+    .istory { font-size: 14.5px; }
+    .ispecs { font-size: 14px; margin-bottom: 20px; }
+    .rp { padding: 40px 20px 44px 30px; }
     .ground { width: min(78%, 300px); }
+    .cap .name { font-size: 22px; }
+    :global(:lang(th)) .cap .name { font-size: 18px; }
+    .tag { right: 16px; }
+    .tag .string { height: 34px; }
+    .tag .card { width: 70px; padding: 16px 6px 9px; font-size: 11px; }
+    .tag .card b { font-size: 21px; }
+    .ribbon { left: 14px; width: 18px; height: 80px; }
+    .folio.l { left: 30px; }
+    .cover { left: 0; width: 100%; }
+    .cover-front, .cover-back { border-radius: 3px; }
+    .frame { padding: 40px 26px; }
+    .frame .foil { font-size: 54px; }
+    .slot.left .shade, .slot.right .shade { border-radius: 3px; background: linear-gradient(90deg, rgba(20,14,6,.5), rgba(20,14,6,.15) var(--edge, 40%), transparent calc(var(--edge, 40%) + 18%)); }
+    .open-hint { margin-top: 16px; font-size: 14px; }
+    .pager { padding-top: 16px; }
+    .pg { width: 38px; height: 38px; }
+    .hero-foot { font-size: 12.5px; padding: 12px 0 22px; }
   }
 </style>
 
@@ -251,20 +283,25 @@ const label = (p: CollectionEntry<'products'>) => `${p.data.name[lang]} (${t(lan
     const R = [...right.querySelectorAll<HTMLElement>('.rp')];
     const shadeL = left.querySelector<HTMLElement>('.shade')!;
     const shadeR = right.querySelector<HTMLElement>('.shade')!;
-    const countEl = document.querySelector<HTMLElement>('.hero-book .count b')!;
+    const countEl = document.querySelector<HTMLElement>('.hero-book .count')!;
     const thai = document.documentElement.lang === 'th';
     const fmt = (n: number) => (thai ? String(n).replace(/\d/g, (d) => '๐๑๒๓๔๕๖๗๘๙'[+d]) : String(n));
-    const fancy = matchMedia('(min-width: 861px) and (prefers-reduced-motion: no-preference)');
+    const singleMQ = matchMedia('(max-width: 860px)');
+    const motionMQ = matchMedia('(prefers-reduced-motion: no-preference)');
     const STRIPS = 8, DURATION = 1150, CURL = 64;
 
-    // Cover: its inside shows the same bookplate, so the landing is seamless
+    // Phone reading order: bookplate, lead piece, then details → photo for each piece
+    const seq: HTMLElement[] = [];
+    R.forEach((r, k) => { if (L[k]) seq.push(L[k]); seq.push(r); });
+    const blank = R[0].cloneNode(false) as HTMLElement; // plain paper for the back of a single page
+
+    // Cover: its inside shows the same bookplate, so the desktop landing is seamless
     const cover = book.querySelector<HTMLElement>('.cover')!;
     const coverBack = cover.querySelector<HTMLElement>('.cover-back')!;
     const plateCopy = L[0].cloneNode(true) as HTMLElement;
     plateCopy.inert = true;
     coverBack.appendChild(plateCopy);
-    // The book stays closed until the visitor opens it
-    if (!fancy.matches) { book.classList.remove('closed'); book.classList.add('opened'); }
+    if (!motionMQ.matches) { book.classList.remove('closed'); book.classList.add('opened'); }
     function openBook() {
       if (!book!.classList.contains('closed')) return;
       book!.classList.remove('closed');
@@ -280,15 +317,38 @@ const label = (p: CollectionEntry<'products'>) => `${p.data.name[lang]} (${t(lan
     cover.addEventListener('click', openBook);
     cover.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openBook(); } });
 
-    let s = 0, busy = false;
-    const setActive = (list: HTMLElement[], n: number) => list.forEach((el, k) => { el.classList.toggle('active', k === n); el.inert = k !== n; });
-    const updateCount = () => { countEl.textContent = fmt(s + 1); };
+    let single = singleMQ.matches;
+    let s = 0, p = 0, busy = false;
+    const setActive = (list: HTMLElement[], el: HTMLElement | null) => list.forEach((x) => { x.classList.toggle('active', x === el); x.inert = x !== el; });
+    function render() {
+      if (single) {
+        const el = seq[p];
+        setActive(L, L.includes(el) ? el : null);
+        setActive(R, R.includes(el) ? el : null);
+        left.style.zIndex = L.includes(el) ? '2' : '1';
+        right.style.zIndex = L.includes(el) ? '1' : '2';
+        countEl.innerHTML = `${thai ? 'หน้า' : 'Page'} <b>${fmt(p + 1)}</b> / ${fmt(seq.length)}`;
+      } else {
+        setActive(L, L[s]); setActive(R, R[s]);
+        left.style.zIndex = right.style.zIndex = '';
+        countEl.innerHTML = `${thai ? 'หน้า' : 'Spread'} <b>${fmt(s + 1)}</b> / ${fmt(R.length)}`;
+      }
+    }
+    // Keep the reader on the same piece when the layout switches
+    singleMQ.addEventListener('change', () => {
+      if (busy) return;
+      single = singleMQ.matches;
+      if (single) p = Math.min(seq.length - 1, s === 0 ? 0 : seq.indexOf(L[s]));
+      else { const el = seq[p]; s = Math.max(0, L.includes(el) ? L.indexOf(el) : R.indexOf(el)); }
+      render();
+    });
 
     // A leaf made of nested strips; each strip shows its slice of the front and back pages
-    function makeLeaf(front: HTMLElement, back: HTMLElement) {
-      const W = right.offsetWidth, w = W / STRIPS;
+    function makeLeaf(front: HTMLElement, back: HTMLElement, x: number, W: number) {
+      const w = W / STRIPS;
       const root = document.createElement('div');
       root.className = 'leaf';
+      root.style.left = x + 'px';
       root.setAttribute('aria-hidden', 'true');
       const strips: { el: HTMLElement; f: HTMLElement; b: HTMLElement; lf: HTMLElement; lb: HTMLElement }[] = [];
       let parent: HTMLElement = root;
@@ -316,9 +376,10 @@ const label = (p: CollectionEntry<'products'>) => `${p.data.name[lang]} (${t(lan
     }
 
     const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-    function flip(dir: number, front: HTMLElement, back: HTMLElement, done: () => void) {
-      const { root, strips } = makeLeaf(front, back);
-      const shade = dir > 0 ? shadeR : shadeL;
+    function flip(dir: number, front: HTMLElement, back: HTMLElement, shade: HTMLElement, done: () => void) {
+      const x = single ? 0 : book!.offsetWidth / 2;
+      const W = single ? book!.offsetWidth : right.offsetWidth;
+      const { root, strips } = makeLeaf(front, back, x, W);
       const bendSign = dir > 0 ? -1 : 1;
       let start = 0;
       function frame(now: number) {
@@ -346,30 +407,48 @@ const label = (p: CollectionEntry<'products'>) => `${p.data.name[lang]} (${t(lan
       }
       requestAnimationFrame(frame);
     }
+    const slotShade = (el: HTMLElement) => (L.includes(el) ? shadeL : shadeR);
 
     function go(dir: number) {
       if (book!.classList.contains('closed')) { if (dir > 0) openBook(); return; }
       if (busy) return;
+      const animate = motionMQ.matches && book!.classList.contains('opened');
+      if (single) {
+        const n = p + dir;
+        if (n < 0 || n >= seq.length) { nudge(dir); return; }
+        if (!animate) { p = n; render(); return; }
+        busy = true;
+        if (dir > 0) {
+          // this page lifts away to the left; the next one is already underneath
+          const front = seq[p];
+          p = n; render();
+          flip(1, front, blank, slotShade(seq[n]), () => { busy = false; });
+        } else {
+          // the previous page swings back in from the left
+          flip(-1, seq[n], blank, slotShade(seq[p]), () => { p = n; render(); busy = false; });
+        }
+        return;
+      }
       const n = s + dir;
       if (n < 0 || n >= R.length) { nudge(dir); return; }
-      if (!fancy.matches || !book!.classList.contains('opened')) { s = n; setActive(L, s); setActive(R, s); updateCount(); return; }
+      if (!animate) { s = n; render(); return; }
       busy = true;
       if (dir > 0) {
         // the right page lifts; its back is the next left page
         const front = R[s], back = L[n];
-        setActive(R, n);
-        flip(1, front, back, () => { s = n; setActive(L, s); updateCount(); busy = false; });
+        setActive(R, R[n]);
+        flip(1, front, back, shadeR, () => { s = n; render(); busy = false; });
       } else {
         // the left page lifts back; its back is the previous right page
         const front = R[n], back = L[s];
-        setActive(L, n);
-        flip(-1, front, back, () => { s = n; setActive(R, s); updateCount(); busy = false; });
+        setActive(L, L[n]);
+        flip(-1, front, back, shadeL, () => { s = n; render(); busy = false; });
       }
     }
-    // At the first or last spread, the page lifts a little instead of doing nothing
+    // At the first or last page, the page lifts a little instead of doing nothing
     function nudge(dir: number) {
-      const el = dir > 0 ? right : left;
-      el.style.transformOrigin = dir > 0 ? 'left center' : 'right center';
+      const el = single ? book! : dir > 0 ? right : left;
+      el.style.transformOrigin = dir > 0 || single ? 'left center' : 'right center';
       el.animate([{ transform: 'none' }, { transform: `rotateY(${dir > 0 ? -7 : 7}deg)` }, { transform: 'none' }], { duration: 460, easing: 'ease-out' });
     }
 
@@ -383,9 +462,15 @@ const label = (p: CollectionEntry<'products'>) => `${p.data.name[lang]} (${t(lan
       if (e.key === 'ArrowRight') go(1);
       if (e.key === 'ArrowLeft') go(-1);
     });
-    let x0 = 0;
-    book.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
-    book.addEventListener('touchend', (e) => { const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1); });
-    updateCount();
+    // Swipe to turn (horizontal swipes only, so vertical scrolling stays natural)
+    let x0 = 0, y0 = 0;
+    book.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+    book.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.3) {
+        if (book.classList.contains('closed')) openBook(); else go(dx < 0 ? 1 : -1);
+      }
+    });
+    render();
   }
 </script>

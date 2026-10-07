@@ -158,4 +158,24 @@ const steps = th
     .steps { grid-template-columns: 1fr 1fr; }
     .step { margin-top: 0 !important; }
   }
+
+  @media (max-width: 760px) {
+    .maker { padding-bottom: 80px; }
+    .story-card { padding: 26px 22px; }
+    .story-card blockquote { font-size: 26px; }
+    :global(:lang(th)) .story-card blockquote { font-size: 20px; }
+    .story-card p { font-size: 14.5px; }
+    .materials { padding-bottom: 90px; }
+    .sw-row { max-width: 280px; gap: 10px; }
+    .lbl { padding: 12px 16px; }
+    .lbl b { font-size: 22px; }
+    :global(:lang(th)) .lbl b { font-size: 18px; }
+    .steps { gap: 14px; }
+    .step { padding: 20px 18px; }
+    .step .n { font-size: 44px; }
+    :global(:lang(th)) .step h3 { font-size: 17px; }
+    .step p { font-size: 13.5px; }
+    .panel { padding: 44px 22px; }
+    :global(:lang(th)) .panel h2 { font-size: 26px; }
+  }
 </style>
