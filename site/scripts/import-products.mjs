@@ -39,6 +39,12 @@ function parseCsv(text) {
 }
 
 const list = (v) => (v || '').split('|').map((s) => s.trim()).filter(Boolean);
+// Spreadsheets (Excel, Numbers) often rewrite 2026-10-07 as 7/10/2026 (day/month/year); accept both
+function isoDate(v) {
+  const m = v.match(/^(\d{1,2})[/.-](\d{1,2})[/.-](\d{4})$/);
+  if (m) return `${m[3]}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}`;
+  return v;
+}
 const slugify = (s) => s.toLowerCase().normalize('NFKD').replace(/[^\w\s-]/g, '').trim().replace(/[\s_]+/g, '-');
 
 const text = readFileSync(csvPath, 'utf8').replace(/^﻿/, '');
@@ -65,13 +71,14 @@ const products = rows.map((r, i) => {
     featured: /^(yes|y|true|1|ใช่)$/i.test(get('featured')),
     images: list(get('images')).map((f) => `./images/${f}`),
     story: { th: get('story_th'), en: get('story_en') },
-    added: get('added') || new Date().toISOString().slice(0, 10),
+    added: isoDate(get('added')) || new Date().toISOString().slice(0, 10),
     dummy: /^(yes|y|true|1)$/i.test(get('dummy')),
   };
   if (!p.name.th || !p.name.en) errors.push(`row ${line}: name_th and name_en are required`);
   if (!LINES.includes(p.line)) errors.push(`row ${line}: line must be knit (ประดิษฐ์ถัก) or craft (ประดิษฐ์คราฟท์)`);
   if (!TYPES.includes(p.type)) errors.push(`row ${line}: type must be one of ${TYPES.join(', ')}`);
   if (!STATUSES.includes(p.status)) errors.push(`row ${line}: status must be one of ${STATUSES.join(', ')}`);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(p.added)) errors.push(`row ${line}: added date "${get('added')}" should look like 2026-10-07 or 7/10/2026`);
   if (!p.priceFrom) errors.push(`row ${line}: price_from is missing`);
   if (!p.images.length) errors.push(`row ${line}: at least one image is required`);
   for (const img of list(get('images'))) {
